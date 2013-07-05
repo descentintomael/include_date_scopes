@@ -1,0 +1,40 @@
+PATH
+  remote: .
+  specs:
+    include_date_scopes (0.0.0)
+      activerecord
+      squeel
+
+GEM
+  remote: http://rubygems.org/
+  specs:
+    activemodel (3.2.13)
+      activesupport (= 3.2.13)
+      builder (~> 3.0.0)
+    activerecord (3.2.13)
+      activemodel (= 3.2.13)
+      activesupport (= 3.2.13)
+      arel (~> 3.0.2)
+      tzinfo (~> 0.3.29)
+    activesupport (3.2.13)
+      i18n (= 0.6.1)
+      multi_json (~> 1.0)
+    arel (3.0.2)
+    builder (3.0.4)
+    i18n (0.6.1)
+    multi_json (1.7.7)
+    polyamorous (0.5.0)
+      activerecord (~> 3.0)
+    sqlite3 (1.3.7)
+    squeel (1.0.18)
+      activerecord (~> 3.0)
+      activesupport (~> 3.0)
+      polyamorous (~> 0.5.0)
+    tzinfo (0.3.37)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  include_date_scopes!
+  sqlite3
