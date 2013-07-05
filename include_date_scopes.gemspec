@@ -22,4 +22,5 @@ DESCRIPTION
   s.add_dependency("squeel")
   s.add_dependency("activerecord")
   s.add_development_dependency("sqlite3")
+  s.add_development_dependency("rspec-rails")
 end
