@@ -4,7 +4,6 @@ require 'rails/all'
 require 'active_record'
 require 'active_support'
 require 'include_date_scopes'
-require 'include_date_scopes/railtie'
 
 if ActiveSupport::VERSION::MAJOR < 4
   require 'active_support/core_ext/logger'
