@@ -1,13 +1,8 @@
-require 'spec_helper'
 
-describe "Post" do
-  # include_examples "with basic date scopes"
-  class Post < ActiveRecord::Base
-    include_date_scopes
-  end
-  let(:date_column) { :created_at }
-  let(:test_class) { Post }
-
+shared_examples "with basic date scopes" do |date_column = :created_at |
+  let!(:test_class) { described_class }
+  let!(:test_factory) { described_class.name.underscore.to_sym }
+  
   describe "date scopes" do
     before(:each) { Timecop.freeze Time.local(2013,02,01,06,30) }
 
@@ -131,10 +126,5 @@ describe "Post" do
       it { should_not include five_minute_ago_obj }
     end
   end
-
-  # it 'does something' do
-  #   define_model_class do
-  #     include_date_scopes
-  #   end
-  # end
 end
+

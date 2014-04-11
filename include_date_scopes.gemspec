@@ -20,6 +20,9 @@ DESCRIPTION
   s.require_paths = ["lib"]
 
   s.add_dependency "squeel"
-  s.add_dependency "activerecord"
+  s.add_dependency "activerecord", '< 4'
+  s.add_dependency "railties"
   s.add_development_dependency "rspec-rails"
+  s.add_development_dependency "sqlite3"
+  s.add_development_dependency 'timecop'
 end
