@@ -1,8 +1,6 @@
 
 shared_examples "with basic date scopes" do |date_column = :created_at |
-  let!(:test_class) { described_class }
-  let!(:test_factory) { described_class.name.underscore.to_sym }
-  
+  let!(:test_class) { Post }
   describe "date scopes" do
     before(:each) { Timecop.freeze Time.local(2013,02,01,06,30) }
 
