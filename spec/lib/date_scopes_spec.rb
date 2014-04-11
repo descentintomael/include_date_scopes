@@ -10,4 +10,14 @@ describe "Post" do
 
     it_behaves_like "with basic date scopes"
   end
+
+  describe 'date scopes on another column' do
+    before(:all) do
+      define_model_class do
+        include_date_scopes_for :updated_at
+      end
+    end
+
+    it_behaves_like "with basic date scopes", :updated_at
+  end
 end
