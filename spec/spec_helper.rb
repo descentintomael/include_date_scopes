@@ -34,11 +34,7 @@ ActiveRecord::Base.connection.create_table(:posts, :force => true) do |t|
   t.boolean :flag
 end
 
-ActiveRecord::Base.include IncludeDateScopes::DateScopes
-
-# class Post < ActiveRecord::Base
-# end
-
+require "#{File.dirname(__FILE__)}/../lib/include_date_scopes/active_record"
 
 RSpec.configure do |config|
 
