@@ -1,4 +1,4 @@
 
 module IncludeDateScopes
-  VERSION = '0.0.0'.freeze
+  VERSION = '0.9.0'.freeze
 end
