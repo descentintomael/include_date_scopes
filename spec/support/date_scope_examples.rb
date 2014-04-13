@@ -2,8 +2,9 @@
 shared_examples "with basic date scopes" do |date_column = :created_at |
   let!(:test_class) { Post }
   describe "date scopes" do
-    before(:each) { Timecop.freeze Time.local(2013,02,01,06,30) }
+    before(:each) { Timecop.freeze Time.local(2013,02,15,06,30) }
 
+    let!(:last_month_obj) { test_class.create! date_column.to_sym => 1.month.ago }
     let!(:last_week_obj) { test_class.create! date_column.to_sym => 1.week.ago }
     let!(:yesterday_obj) { test_class.create! date_column.to_sym => 24.hours.ago }
     let!(:hour_ago_obj) { test_class.create! date_column.to_sym => 1.hour.ago }
@@ -122,6 +123,63 @@ shared_examples "with basic date scopes" do |date_column = :created_at |
       it { should include yesterday_obj }
       it { should_not include hour_ago_obj }
       it { should_not include five_minute_ago_obj }
+    end
+
+    describe ":last_24_hours" do
+      subject { test_class.last_24_hours }
+
+      it { should_not include last_week_obj }
+      it { should_not include yesterday_obj }
+      it { should include hour_ago_obj }
+      it { should include five_minute_ago_obj }
+    end
+
+    describe ":last_hour" do
+      subject { test_class.last_hour }
+
+      it { should_not include last_week_obj }
+      it { should_not include yesterday_obj }
+      it { should_not include hour_ago_obj } # should not because this is exclusive
+      it { should include five_minute_ago_obj }
+    end
+
+    describe ":last_week" do
+      subject { test_class.last_week }
+
+      it { should_not include last_week_obj }
+      it { should include yesterday_obj }
+      it { should include hour_ago_obj }
+      it { should include five_minute_ago_obj }
+    end
+
+    describe ":last_30_days" do
+      subject { test_class.last_30days }
+
+      it { should_not include last_month_obj }
+      it { should include last_week_obj }
+      it { should include yesterday_obj }
+      it { should include hour_ago_obj }
+      it { should include five_minute_ago_obj }
+    end
+
+    describe ":this_week" do
+      subject { test_class.this_week }
+
+      it { should_not include last_week_obj }
+      it { should include yesterday_obj }
+      it { should include hour_ago_obj }
+      it { should include five_minute_ago_obj }
+      it { should include before_midnight_ago_obj }
+    end
+
+    describe ":this_month" do
+      subject { test_class.this_month }
+
+      it { should_not include last_month_obj }
+      it { should include last_week_obj }
+      it { should include yesterday_obj }
+      it { should include hour_ago_obj }
+      it { should include five_minute_ago_obj }
     end
   end
 end
