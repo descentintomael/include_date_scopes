@@ -13,7 +13,7 @@ shared_examples "with basic date scopes" do |date_column = :created_at |
 
     describe ":between" do
       context "with DateTime" do
-        subject {test_class.between(2.hours.ago, 1.minute.ago).all}  
+        subject { test_class.between(2.hours.ago, 1.minute.ago) }
 
         it { should_not include last_week_obj }
         it { should_not include yesterday_obj }
@@ -21,7 +21,7 @@ shared_examples "with basic date scopes" do |date_column = :created_at |
         it { should include five_minute_ago_obj }
       end
       context "with Date" do
-        subject {test_class.between(2.days.ago.to_date, Date.today).all}  
+        subject { test_class.between(2.days.ago.to_date, Date.today) }
 
         it { should_not include last_week_obj }
         it { should include yesterday_obj }
@@ -32,7 +32,7 @@ shared_examples "with basic date scopes" do |date_column = :created_at |
 
     describe ":after" do
       context "with DateTime" do
-        subject {test_class.after(2.hours.ago).all}
+        subject { test_class.after(2.hours.ago) }
 
         it { should_not include last_week_obj }
         it { should_not include yesterday_obj }
@@ -40,7 +40,7 @@ shared_examples "with basic date scopes" do |date_column = :created_at |
         it { should include five_minute_ago_obj }
       end
       context "with Date" do
-        subject {test_class.after(2.days.ago.to_date).all}  
+        subject { test_class.after(2.days.ago.to_date) }
 
         it { should_not include last_week_obj }
         it { should include yesterday_obj }
@@ -51,7 +51,7 @@ shared_examples "with basic date scopes" do |date_column = :created_at |
 
     describe ":on_or_after_date" do
       context "with DateTime" do
-        subject {test_class.on_or_after_date(2.hours.ago).all}
+        subject { test_class.on_or_after_date(2.hours.ago) }
 
         it { should_not include last_week_obj }
         it { should_not include yesterday_obj }
@@ -59,7 +59,7 @@ shared_examples "with basic date scopes" do |date_column = :created_at |
         it { should include five_minute_ago_obj }
       end
       context "with Date" do
-        subject {test_class.on_or_after_date(2.days.ago.to_date).all}
+        subject { test_class.on_or_after_date(2.days.ago.to_date) }
 
         it { should_not include last_week_obj }
         it { should include yesterday_obj }
@@ -70,7 +70,7 @@ shared_examples "with basic date scopes" do |date_column = :created_at |
 
     describe ":before" do
       context "with DateTime" do
-        subject {test_class.before(2.hours.ago).all}  
+        subject { test_class.before(2.hours.ago) }
 
         it { should include last_week_obj }
         it { should include yesterday_obj }
@@ -78,7 +78,7 @@ shared_examples "with basic date scopes" do |date_column = :created_at |
         it { should_not include five_minute_ago_obj }
       end
       context "with Date" do
-        subject {test_class.before(Date.today).all}  
+        subject { test_class.before(Date.today) }
 
         it { should include last_week_obj }
         it { should include yesterday_obj }
@@ -89,7 +89,7 @@ shared_examples "with basic date scopes" do |date_column = :created_at |
 
     describe ":on_or_before_date" do
       context "with DateTime" do
-        subject {test_class.on_or_before_date(25.hours.ago).all}  
+        subject { test_class.on_or_before_date(25.hours.ago) }
 
         it { should include last_week_obj }
         it { should include yesterday_obj }
@@ -97,7 +97,7 @@ shared_examples "with basic date scopes" do |date_column = :created_at |
         it { should_not include five_minute_ago_obj }
       end
       context "with Date" do
-        subject {test_class.on_or_before_date(Date.yesterday).all}  
+        subject { test_class.on_or_before_date(Date.yesterday) }
 
         it { should include last_week_obj }
         it { should include yesterday_obj }
@@ -107,7 +107,7 @@ shared_examples "with basic date scopes" do |date_column = :created_at |
     end
 
     describe ":today" do
-      subject {test_class.today.all}  
+      subject { test_class.today }
 
       it { should_not include last_week_obj }
       it { should_not include yesterday_obj }
@@ -116,7 +116,7 @@ shared_examples "with basic date scopes" do |date_column = :created_at |
     end
 
     describe ":yesterday" do
-      subject {test_class.yesterday.all}  
+      subject { test_class.yesterday }
 
       it { should_not include last_week_obj }
       it { should include yesterday_obj }
