@@ -2,7 +2,7 @@
 shared_examples "with basic date scopes" do |date_column = :created_at |
   let!(:test_class) { Post }
   describe "date scopes" do
-    before(:each) { Timecop.freeze Time.local(2013,02,15,06,30) }
+    before(:all) { Timecop.freeze Time.local(2013,02,15,06,30) }
 
     let!(:last_month_obj) { test_class.create! date_column.to_sym => 1.month.ago }
     let!(:last_week_obj) { test_class.create! date_column.to_sym => 1.week.ago }
