@@ -19,7 +19,6 @@ DESCRIPTION
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
 
-  s.add_dependency "squeel"
   s.add_dependency "activerecord", '< 4'
   s.add_dependency "railties"
   s.add_development_dependency "rspec-rails"
