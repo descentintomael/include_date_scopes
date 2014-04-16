@@ -21,7 +21,6 @@
 #   include_date_scopes_for :net_payment_settlement_date, true   # prepend field name -- ex: Payment.net_payment_settlement_date_on(date)
 #
 #
-require 'squeel'
 
 module IncludeDateScopes
   module DateScopes
@@ -48,35 +47,36 @@ module IncludeDateScopes
 
       def define_timestamp_scopes_for(column_name, prepend_name = false)
         prefix = prepend_name ? "#{column_name}_" : ""
+        t = self.arel_table
 
         define_singleton_method :"#{prefix}between" do |start_date_or_time, stop_date_or_time|
           start_time = (start_date_or_time.is_a?(Date) ? start_date_or_time.to_time : start_date_or_time)
           stop_time = (stop_date_or_time.is_a?(Date) ? stop_date_or_time.to_time + 1.day : stop_date_or_time )
-          where{(__send__(column_name).gte start_time) & (__send__(column_name).lt stop_time)}
+          where(t[column_name].gteq(start_time).and(t[column_name].lt stop_time))
         end
 
         define_singleton_method :"#{prefix}on_or_before_date" do |date|
-          where{ __send__(column_name).lt date.to_date.tomorrow.midnight.gmtime }
+          where( t[column_name].lt date.to_date.tomorrow.midnight.gmtime )
         end
 
         define_singleton_method :"#{prefix}on_or_before" do |time| 
-          where{__send__(column_name).lte (time.is_a?(Date) ? time.to_time : time)}
+          where(t[column_name].lte (time.is_a?(Date) ? time.to_time : time))
         end
 
         define_singleton_method :"#{prefix}before" do |time| 
-          where{__send__(column_name).lt (time.is_a?(Date) ? time.to_time : time)}
+          where(t[column_name].lt (time.is_a?(Date) ? time.to_time : time))
         end
 
         define_singleton_method :"#{prefix}on_or_after_date" do |time|
-          where{__send__(column_name).gte time.to_date.midnight.gmtime }
+          where(t[column_name].gteq time.to_date.midnight.gmtime )
         end
 
         define_singleton_method :"#{prefix}on_or_after" do |time|
-          where{__send__(column_name).gte (time.is_a?(Date) ? time.to_time + 1.day : time )}
+          where(t[column_name].gteq (time.is_a?(Date) ? time.to_time + 1.day : time ))
         end
 
         define_singleton_method :"#{prefix}after" do |time|
-          where{__send__(column_name).gt (time.is_a?(Date) ? time.to_time + 1.day : time )}
+          where(t[column_name].gt (time.is_a?(Date) ? time.to_time + 1.day : time ))
         end
 
         define_singleton_method :"#{prefix}on" do |day| 
@@ -129,27 +129,27 @@ module IncludeDateScopes
         prefix = prepend_name ? "#{column_name}_" : ""
 
         define_singleton_method :"#{prefix}between" do |start_date, stop_date|
-          where{(__send__(column_name).gte start_date) & (__send__(column_name).lte stop_date)}
+          where(t[column_name].gteq(start_date).and(t[column_name].lte stop_date))
         end
 
         define_singleton_method :"#{prefix}on_or_before" do |date| 
-          where{ __send__(column_name).lte date }
+          where( t[column_name].lte date )
         end
 
         define_singleton_method :"#{prefix}before" do |date| 
-          where{__send__(column_name).lt date}
+          where(t[column_name].lt date)
         end
 
         define_singleton_method :"#{prefix}on_or_after" do |date|
-          where{__send__(column_name).gte date}
+          where(t[column_name].gteq date)
         end
 
         define_singleton_method :"#{prefix}after" do |date| 
-          where{__send__(column_name).gt date}
+          where(t[column_name].gt date)
         end
 
         define_singleton_method :"#{prefix}on" do |date|
-          where{__send__(column_name).eq date}
+          where(t[column_name].eq date)
         end
 
         define_singleton_method :"#{prefix}day" do |day|
