@@ -78,6 +78,77 @@ shared_examples "date scopes" do |date_column = :created_at, prefix = '' |
       it { should include yesterday_obj }
     end
 
+    describe 'last_n_days' do
+      subject { test_class.send("#{prefix}last_n_days", 3) }
+
+      let(:after_threshold_obj) { test_class.create! date_column => 4.days.ago }
+      let(:on_threshold_obj) { test_class.create! date_column => 3.days.ago }
+      let(:before_threshold_obj) { test_class.create! date_column => 2.days.ago }
+
+      it { should_not include after_threshold_obj }
+      it { should include on_threshold_obj }
+      it { should include before_threshold_obj }
+    end
+
+    describe 'last_n_months' do
+      subject { test_class.send("#{prefix}last_n_months", 3) }
+
+      let(:after_threshold_obj) { test_class.create! date_column => 4.months.ago }
+      let(:on_threshold_obj) { test_class.create! date_column => 3.months.ago }
+      let(:before_threshold_obj) { test_class.create! date_column => 2.months.ago }
+
+      it { should_not include after_threshold_obj }
+      it { should include on_threshold_obj }
+      it { should include before_threshold_obj }
+    end
+
+    describe 'last_n_years' do
+      subject { test_class.send("#{prefix}last_n_years", 3) }
+
+      let(:after_threshold_obj) { test_class.create! date_column => 4.years.ago }
+      let(:on_threshold_obj) { test_class.create! date_column => 3.years.ago }
+      let(:before_threshold_obj) { test_class.create! date_column => 2.years.ago }
+
+      it { should_not include after_threshold_obj }
+      it { should include on_threshold_obj }
+      it { should include before_threshold_obj }
+    end
+
+    describe 'next_n_days' do
+      subject { test_class.send("#{prefix}next_n_days", 3) }
+
+      let(:after_threshold_obj) { test_class.create! date_column => 2.days.from_now }
+      let(:on_threshold_obj) { test_class.create! date_column => 3.days.from_now }
+      let(:before_threshold_obj) { test_class.create! date_column => 4.days.from_now }
+
+      it { should include after_threshold_obj }
+      it { should include on_threshold_obj }
+      it { should_not include before_threshold_obj }
+    end
+
+    describe 'next_n_months' do
+      subject { test_class.send("#{prefix}next_n_months", 3) }
+
+      let(:after_threshold_obj) { test_class.create! date_column => 2.months.from_now }
+      let(:on_threshold_obj) { test_class.create! date_column => 3.months.from_now }
+      let(:before_threshold_obj) { test_class.create! date_column => 4.months.from_now }
+
+      it { should include after_threshold_obj }
+      it { should include on_threshold_obj }
+      it { should_not include before_threshold_obj }
+    end
+
+    describe 'next_n_years' do
+      subject { test_class.send("#{prefix}next_n_years", 3) }
+
+      let(:after_threshold_obj) { test_class.create! date_column => 2.years.from_now }
+      let(:on_threshold_obj) { test_class.create! date_column => 3.years.from_now }
+      let(:before_threshold_obj) { test_class.create! date_column => 4.years.from_now }
+
+      it { should include after_threshold_obj }
+      it { should include on_threshold_obj }
+      it { should_not include before_threshold_obj }
+    end
 
     describe ":last_30_days" do
       subject { test_class.send("#{prefix}last_30days") }
@@ -90,20 +161,37 @@ shared_examples "date scopes" do |date_column = :created_at, prefix = '' |
     describe ":this_week" do
       subject { test_class.send("#{prefix}this_week") }
 
-      it { should_not include last_week_obj }
-      it { should include beginning_of_week_obj }
-      it { should include yesterday_obj }
-      it { should include today_obj }
+      let(:before_week) { test_class.create! date_column => Date.today.beginning_of_week - 1.minute }
+      let(:at_beginning_of_week) { test_class.create! date_column => Date.today.beginning_of_week }
+      let(:after_week) { test_class.create! date_column => Date.today.beginning_of_week + 1.minute }
+
+      it { should_not include before_week }
+      it { should include at_beginning_of_week }
+      it { should include after_week }
     end
 
     describe ":this_month" do
       subject { test_class.send("#{prefix}this_month") }
 
-      it { should_not include last_month_obj }
-      it { should include beginning_of_month_obj }
-      it { should include beginning_of_week_obj }
-      it { should include last_week_obj }
-      it { should include yesterday_obj }
+      let(:before_month) { test_class.create! date_column => Date.today.beginning_of_month - 1.minute }
+      let(:at_beginning_of_month) { test_class.create! date_column => Date.today.beginning_of_month }
+      let(:after_month) { test_class.create! date_column => Date.today.beginning_of_month + 1.minute }
+
+      it { should_not include before_month }
+      it { should include at_beginning_of_month }
+      it { should include after_month }
+    end
+
+    describe ":this_year" do
+      subject { test_class.send("#{prefix}this_year") }
+
+      let(:before_year) { test_class.create! date_column => Date.today.beginning_of_year - 1.minute }
+      let(:at_beginning_of_year) { test_class.create! date_column => Date.today.beginning_of_year }
+      let(:after_year) { test_class.create! date_column => Date.today.beginning_of_year + 1.minute }
+
+      it { should_not include before_year }
+      it { should include at_beginning_of_year }
+      it { should include after_year }
     end
   end
 end

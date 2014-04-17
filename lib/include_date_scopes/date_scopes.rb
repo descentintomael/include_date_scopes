@@ -95,46 +95,51 @@ module IncludeDateScopes
           __send__(:"#{prefix}after", 1.hour.ago)
         end
 
-        define_singleton_method :"#{prefix}last_week" do
-          __send__(:"#{prefix}after", 1.week.ago)
+        define_singleton_method :"#{prefix}last_n_seconds" do |count|
+          __send__(:"#{prefix}on_or_after", count.seconds.ago)
         end
 
-        define_singleton_method :"#{prefix}last_month" do
-          __send__(:"#{prefix}after", 1.month.ago)
+        define_singleton_method :"#{prefix}last_n_minutes" do |count|
+          __send__(:"#{prefix}on_or_after", count.minutes.ago)
         end
 
-        define_singleton_method :"#{prefix}last_year" do
-          __send__(:"#{prefix}after", 1.year.ago)
+        define_singleton_method :"#{prefix}last_n_hours" do |count|
+          __send__(:"#{prefix}on_or_after", count.hours.ago)
         end
 
-        define_singleton_method :"#{prefix}last_30days" do
-          __send__(:"#{prefix}after", 30.days.ago)
+        define_singleton_method :"#{prefix}next_n_seconds" do |count|
+          __send__(:"#{prefix}on_or_before", count.seconds.from_now)
         end
 
-        define_singleton_method :"#{prefix}today" do
-          __send__(:"#{prefix}on", Date.today)
+        define_singleton_method :"#{prefix}next_n_minutes" do |count|
+          __send__(:"#{prefix}on_or_before", count.minutes.from_now)
+        end
+
+        define_singleton_method :"#{prefix}next_n_hours" do |count|
+          __send__(:"#{prefix}on_or_before", count.hours.from_now)
+        end
+
+        define_singleton_method :"#{prefix}this_minute" do
+          __send__(:"#{prefix}between", Time.now.change(sec: 0), Time.now.change(sec: 59, usec: Rational(999999999, 1000)))
+        end
+
+        define_singleton_method :"#{prefix}this_hour" do
+          __send__(:"#{prefix}between", 1.hour.ago.end_of_hour, Time.now.end_of_hour)
         end
 
         define_singleton_method :"#{prefix}this_week" do
-          __send__(:"#{prefix}between", Date.today.beginning_of_week, Date.today.end_of_week)
+          __send__(:"#{prefix}between", 1.week.ago.end_of_week, Time.now.end_of_week)
         end
 
         define_singleton_method :"#{prefix}this_month" do
-          __send__(:"#{prefix}between", Date.today.beginning_of_month, Date.today.end_of_month)
+          __send__(:"#{prefix}between", 1.month.ago.end_of_month, Time.now.end_of_month)
         end
 
         define_singleton_method :"#{prefix}this_year" do
-          __send__(:"#{prefix}between", Date.today.beginning_of_year, Date.today.end_of_year)
+          __send__(:"#{prefix}between", 1.year.ago.end_of_year, Time.now.end_of_year)
         end
 
-        define_singleton_method :"#{prefix}yesterday" do
-          __send__(:"#{prefix}on", Date.yesterday)
-        end
-
-        define_singleton_method :"#{prefix}most_recent" do
-          order("#{column_name} desc")
-        end
-
+        define_common_scopes t, prefix, column_name
       end
 
       def define_date_scopes_for(column_name, prepend_name = false)
@@ -165,12 +170,34 @@ module IncludeDateScopes
           where(t[column_name].eq date)
         end
 
+        define_singleton_method :"#{prefix}this_week" do
+          __send__(:"#{prefix}between", Date.today.beginning_of_week, Date.today.end_of_week)
+        end
+
+        define_singleton_method :"#{prefix}this_month" do
+          __send__(:"#{prefix}between", Date.today.beginning_of_month, Date.today.end_of_month)
+        end
+
+        define_singleton_method :"#{prefix}this_year" do
+          __send__(:"#{prefix}between", Date.today.beginning_of_year, Date.today.end_of_year)
+        end
+
+        define_common_scopes t, prefix, column_name
+      end
+
+      def define_common_scopes(arel, prefix, column_name)
+        t = arel
+
         define_singleton_method :"#{prefix}day" do |day|
           __send__(:"#{prefix}on", day)
         end
 
         define_singleton_method :"#{prefix}today" do
           __send__(:"#{prefix}on", Date.today)
+        end
+
+        define_singleton_method :"#{prefix}yesterday" do
+          __send__(:"#{prefix}on", Date.yesterday)
         end
 
         define_singleton_method :"#{prefix}last_week" do
@@ -185,30 +212,37 @@ module IncludeDateScopes
           __send__(:"#{prefix}after", 1.year.ago)
         end
 
+        define_singleton_method :"#{prefix}last_n_days" do |count|
+          __send__(:"#{prefix}on_or_after", count.days.ago)
+        end
+
+        define_singleton_method :"#{prefix}last_n_months" do |count|
+          __send__(:"#{prefix}on_or_after", count.months.ago)
+        end
+
+        define_singleton_method :"#{prefix}last_n_years" do |count|
+          __send__(:"#{prefix}on_or_after", count.years.ago)
+        end
+
+        define_singleton_method :"#{prefix}next_n_days" do |count|
+          __send__(:"#{prefix}on_or_before", count.days.from_now)
+        end
+
+        define_singleton_method :"#{prefix}next_n_months" do |count|
+          __send__(:"#{prefix}on_or_before", count.months.from_now)
+        end
+
+        define_singleton_method :"#{prefix}next_n_years" do |count|
+          __send__(:"#{prefix}on_or_before", count.years.from_now)
+        end
+
         define_singleton_method :"#{prefix}last_30days" do
           __send__(:"#{prefix}after", 30.days.ago)
-        end
-
-        define_singleton_method :"#{prefix}this_week" do
-          __send__(:"#{prefix}between", Date.today.beginning_of_week, Date.today.end_of_week)
-        end
-
-        define_singleton_method :"#{prefix}this_month" do
-          __send__(:"#{prefix}between", Date.today.beginning_of_month, Date.today.end_of_month)
-        end
-
-        define_singleton_method :"#{prefix}this_year" do
-          __send__(:"#{prefix}between", Date.today.beginning_of_year, Date.today.end_of_year)
-        end
-
-        define_singleton_method :"#{prefix}yesterday" do
-          __send__(:"#{prefix}on", Date.yesterday)
         end
 
         define_singleton_method :"#{prefix}most_recent" do
           order("#{column_name} desc")
         end
-
       end
     end
   end
