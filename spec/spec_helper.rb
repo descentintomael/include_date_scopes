@@ -27,11 +27,10 @@ ActiveRecord::Base.establish_connection(
   :database => ':memory:'
 )
 ActiveRecord::Base.connection.create_table(:posts, :force => true) do |t|
-  t.string :body
   t.timestamp :show_at
+  t.date :show_until
   t.timestamp :created_at
   t.timestamp :updated_at
-  t.boolean :flag
 end
 
 require "#{File.dirname(__FILE__)}/../lib/include_date_scopes/active_record"

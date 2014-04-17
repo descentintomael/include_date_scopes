@@ -1,185 +1,109 @@
 
-shared_examples "with basic date scopes" do |date_column = :created_at |
-  let!(:test_class) { Post }
+shared_examples "date scopes" do |date_column = :created_at, prefix = '' |
+  let(:test_class) { Post }
   describe "date scopes" do
     before(:all) { Timecop.freeze Time.local(2013,02,15,06,30) }
 
-    let!(:last_month_obj) { test_class.create! date_column.to_sym => 1.month.ago }
-    let!(:last_week_obj) { test_class.create! date_column.to_sym => 1.week.ago }
-    let!(:yesterday_obj) { test_class.create! date_column.to_sym => 24.hours.ago }
-    let!(:hour_ago_obj) { test_class.create! date_column.to_sym => 1.hour.ago }
-    let!(:five_minute_ago_obj) { test_class.create! date_column.to_sym => 5.minutes.ago }
-    let!(:after_midnight_ago_obj) { test_class.create! date_column.to_sym => Date.today.midnight + 5.minutes }
-    let!(:before_midnight_ago_obj) { test_class.create! date_column.to_sym => Date.today.midnight - 5.minutes }
+    let(:last_year_obj) { test_class.create! date_column => 1.year.ago }
+    let(:last_month_obj) { test_class.create! date_column => 1.month.ago.to_date }
+    let(:beginning_of_month_obj) { test_class.create! date_column => Date.today.beginning_of_month }
+    let(:last_week_obj) { test_class.create! date_column => 7.days.ago.to_date }
+    let(:beginning_of_week_obj) { test_class.create! date_column => Date.today.beginning_of_week }
+    let(:yesterday_obj) { test_class.create! date_column => Date.yesterday }
+    let(:today_obj) { test_class.create! date_column => Date.today }
 
     describe ":between" do
-      context "with DateTime" do
-        subject { test_class.between(2.hours.ago, 1.minute.ago) }
+      subject { test_class.send("#{prefix}between", 2.days.ago.to_date, Date.yesterday) }
 
-        it { should_not include last_week_obj }
-        it { should_not include yesterday_obj }
-        it { should include hour_ago_obj }
-        it { should include five_minute_ago_obj }
-      end
-      context "with Date" do
-        subject { test_class.between(2.days.ago.to_date, Date.today) }
-
-        it { should_not include last_week_obj }
-        it { should include yesterday_obj }
-        it { should include hour_ago_obj }
-        it { should include five_minute_ago_obj }
-      end
+      it { should_not include last_week_obj }
+      it { should include yesterday_obj }
+      it { should_not include today_obj }
     end
 
     describe ":after" do
-      context "with DateTime" do
-        subject { test_class.after(2.hours.ago) }
+      subject { test_class.send("#{prefix}after", 2.days.ago.to_date) }
 
-        it { should_not include last_week_obj }
-        it { should_not include yesterday_obj }
-        it { should include hour_ago_obj }
-        it { should include five_minute_ago_obj }
-      end
-      context "with Date" do
-        subject { test_class.after(2.days.ago.to_date) }
-
-        it { should_not include last_week_obj }
-        it { should include yesterday_obj }
-        it { should include hour_ago_obj }
-        it { should include five_minute_ago_obj }
-      end
-    end
-
-    describe ":on_or_after_date" do
-      context "with DateTime" do
-        subject { test_class.on_or_after_date(2.hours.ago) }
-
-        it { should_not include last_week_obj }
-        it { should_not include yesterday_obj }
-        it { should include hour_ago_obj }
-        it { should include five_minute_ago_obj }
-      end
-      context "with Date" do
-        subject { test_class.on_or_after_date(2.days.ago.to_date) }
-
-        it { should_not include last_week_obj }
-        it { should include yesterday_obj }
-        it { should include hour_ago_obj }
-        it { should include five_minute_ago_obj }
-      end
+      it { should_not include last_week_obj }
+      it { should include yesterday_obj }
+      it { should include today_obj }
     end
 
     describe ":before" do
-      context "with DateTime" do
-        subject { test_class.before(2.hours.ago) }
+      subject { test_class.send("#{prefix}before", Date.today) }
 
-        it { should include last_week_obj }
-        it { should include yesterday_obj }
-        it { should_not include hour_ago_obj }
-        it { should_not include five_minute_ago_obj }
-      end
-      context "with Date" do
-        subject { test_class.before(Date.today) }
-
-        it { should include last_week_obj }
-        it { should include yesterday_obj }
-        it { should_not include hour_ago_obj }
-        it { should_not include five_minute_ago_obj }
-      end
-    end
-
-    describe ":on_or_before_date" do
-      context "with DateTime" do
-        subject { test_class.on_or_before_date(25.hours.ago) }
-
-        it { should include last_week_obj }
-        it { should include yesterday_obj }
-        it { should_not include hour_ago_obj }
-        it { should_not include five_minute_ago_obj }
-      end
-      context "with Date" do
-        subject { test_class.on_or_before_date(Date.yesterday) }
-
-        it { should include last_week_obj }
-        it { should include yesterday_obj }
-        it { should_not include hour_ago_obj }
-        it { should_not include five_minute_ago_obj }
-      end
+      it { should include last_week_obj }
+      it { should include yesterday_obj }
+      it { should_not include today_obj }
     end
 
     describe ":today" do
-      subject { test_class.today }
+      subject { test_class.send("#{prefix}today") }
 
       it { should_not include last_week_obj }
       it { should_not include yesterday_obj }
-      it { should include hour_ago_obj }
-      it { should include five_minute_ago_obj }
+      it { should include today_obj }
     end
 
     describe ":yesterday" do
-      subject { test_class.yesterday }
+      subject { test_class.send("#{prefix}yesterday") }
 
       it { should_not include last_week_obj }
       it { should include yesterday_obj }
-      it { should_not include hour_ago_obj }
-      it { should_not include five_minute_ago_obj }
-    end
-
-    describe ":last_24_hours" do
-      subject { test_class.last_24_hours }
-
-      it { should_not include last_week_obj }
-      it { should_not include yesterday_obj }
-      it { should include hour_ago_obj }
-      it { should include five_minute_ago_obj }
-    end
-
-    describe ":last_hour" do
-      subject { test_class.last_hour }
-
-      it { should_not include last_week_obj }
-      it { should_not include yesterday_obj }
-      it { should_not include hour_ago_obj } # should not because this is exclusive
-      it { should include five_minute_ago_obj }
+      it { should_not include today_obj }
     end
 
     describe ":last_week" do
-      subject { test_class.last_week }
+      subject { test_class.send("#{prefix}last_week") }
 
       it { should_not include last_week_obj }
       it { should include yesterday_obj }
-      it { should include hour_ago_obj }
-      it { should include five_minute_ago_obj }
+      it { should include today_obj }
     end
 
+    describe ":last_month" do
+      subject { test_class.send("#{prefix}last_month") }
+
+      it { should_not include last_year_obj }
+      it { should_not include last_month_obj }
+      it { should include last_week_obj }
+      it { should include yesterday_obj }
+    end
+
+    describe ":last_year" do
+      subject { test_class.send("#{prefix}last_year") }
+
+      it { should_not include last_year_obj }
+      it { should include last_month_obj }
+      it { should include last_week_obj }
+      it { should include yesterday_obj }
+    end
+
+
     describe ":last_30_days" do
-      subject { test_class.last_30days }
+      subject { test_class.send("#{prefix}last_30days") }
 
       it { should_not include last_month_obj }
       it { should include last_week_obj }
       it { should include yesterday_obj }
-      it { should include hour_ago_obj }
-      it { should include five_minute_ago_obj }
     end
 
     describe ":this_week" do
-      subject { test_class.this_week }
+      subject { test_class.send("#{prefix}this_week") }
 
       it { should_not include last_week_obj }
+      it { should include beginning_of_week_obj }
       it { should include yesterday_obj }
-      it { should include hour_ago_obj }
-      it { should include five_minute_ago_obj }
-      it { should include before_midnight_ago_obj }
+      it { should include today_obj }
     end
 
     describe ":this_month" do
-      subject { test_class.this_month }
+      subject { test_class.send("#{prefix}this_month") }
 
       it { should_not include last_month_obj }
+      it { should include beginning_of_month_obj }
+      it { should include beginning_of_week_obj }
       it { should include last_week_obj }
       it { should include yesterday_obj }
-      it { should include hour_ago_obj }
-      it { should include five_minute_ago_obj }
     end
   end
 end
