@@ -52,7 +52,7 @@ module IncludeDateScopes
         define_singleton_method :"#{prefix}between" do |start_date_or_time, stop_date_or_time|
           start_time = (start_date_or_time.is_a?(Date) ? start_date_or_time.to_time : start_date_or_time)
           stop_time = (stop_date_or_time.is_a?(Date) ? stop_date_or_time.to_time + 1.day : stop_date_or_time )
-          where(t[column_name].gteq(start_time).and(t[column_name].lt stop_time))
+          where(t[column_name].gteq(start_time).and(t[column_name].lteq stop_time))
         end
 
         define_singleton_method :"#{prefix}on_or_before_date" do |date|
@@ -88,35 +88,47 @@ module IncludeDateScopes
         end
 
         define_singleton_method :"#{prefix}last_24_hours" do
-          __send__(:"#{prefix}after", 24.hours.ago)
+          __send__(:"#{prefix}last_day")
+        end
+
+        define_singleton_method :"#{prefix}next_minute" do
+          __send__(:"#{prefix}between", Time.now, 1.minute.from_now)
+        end
+
+        define_singleton_method :"#{prefix}next_hour" do
+          __send__(:"#{prefix}between", Time.now, 1.hour.from_now)
+        end
+
+        define_singleton_method :"#{prefix}last_minute" do
+          __send__(:"#{prefix}between", 1.minute.ago, Time.now)
         end
 
         define_singleton_method :"#{prefix}last_hour" do
-          __send__(:"#{prefix}after", 1.hour.ago)
+          __send__(:"#{prefix}between", 1.hour.ago, Time.now)
         end
 
         define_singleton_method :"#{prefix}last_n_seconds" do |count|
-          __send__(:"#{prefix}on_or_after", count.seconds.ago)
+          __send__(:"#{prefix}between", count.seconds.ago, Time.now)
         end
 
         define_singleton_method :"#{prefix}last_n_minutes" do |count|
-          __send__(:"#{prefix}on_or_after", count.minutes.ago)
+          __send__(:"#{prefix}between", count.minutes.ago, Time.now)
         end
 
         define_singleton_method :"#{prefix}last_n_hours" do |count|
-          __send__(:"#{prefix}on_or_after", count.hours.ago)
+          __send__(:"#{prefix}between", count.hours.ago, Time.now)
         end
 
         define_singleton_method :"#{prefix}next_n_seconds" do |count|
-          __send__(:"#{prefix}on_or_before", count.seconds.from_now)
+          __send__(:"#{prefix}between", Time.now, count.seconds.from_now)
         end
 
         define_singleton_method :"#{prefix}next_n_minutes" do |count|
-          __send__(:"#{prefix}on_or_before", count.minutes.from_now)
+          __send__(:"#{prefix}between", Time.now, count.minutes.from_now)
         end
 
         define_singleton_method :"#{prefix}next_n_hours" do |count|
-          __send__(:"#{prefix}on_or_before", count.hours.from_now)
+          __send__(:"#{prefix}between", Time.now, count.hours.from_now)
         end
 
         define_singleton_method :"#{prefix}this_minute" do
@@ -125,6 +137,10 @@ module IncludeDateScopes
 
         define_singleton_method :"#{prefix}this_hour" do
           __send__(:"#{prefix}between", 1.hour.ago.end_of_hour, Time.now.end_of_hour)
+        end
+
+        define_singleton_method :"#{prefix}this_day" do
+          __send__(:"#{prefix}between", 1.day.ago.end_of_day, Time.now.end_of_day)
         end
 
         define_singleton_method :"#{prefix}this_week" do
@@ -147,27 +163,31 @@ module IncludeDateScopes
         t = self.arel_table
 
         define_singleton_method :"#{prefix}between" do |start_date, stop_date|
-          where(t[column_name].gteq(start_date).and(t[column_name].lteq stop_date))
+          where(t[column_name].gteq(start_date.to_date).and(t[column_name].lteq(stop_date.to_date)))
         end
 
         define_singleton_method :"#{prefix}on_or_before" do |date| 
-          where( t[column_name].lteq date )
+          where t[column_name].lteq date.to_date
         end
 
         define_singleton_method :"#{prefix}before" do |date| 
-          where(t[column_name].lt date)
+          where t[column_name].lt date.to_date
         end
 
         define_singleton_method :"#{prefix}on_or_after" do |date|
-          where(t[column_name].gteq date)
+          where t[column_name].gteq date.to_date
         end
 
         define_singleton_method :"#{prefix}after" do |date| 
-          where(t[column_name].gt date)
+          where t[column_name].gt date.to_date
         end
 
         define_singleton_method :"#{prefix}on" do |date|
-          where(t[column_name].eq date)
+          where t[column_name].eq date.to_date
+        end
+
+        define_singleton_method :"#{prefix}this_day" do
+          __send__(:"#{prefix}today")
         end
 
         define_singleton_method :"#{prefix}this_week" do
@@ -200,44 +220,76 @@ module IncludeDateScopes
           __send__(:"#{prefix}on", Date.yesterday)
         end
 
+        define_singleton_method :"#{prefix}tomorrow" do
+          __send__(:"#{prefix}on", Date.tomorrow)
+        end
+
+        define_singleton_method :"#{prefix}next_day" do
+          __send__(:"#{prefix}between", Time.now, 1.day.from_now)
+        end
+
+        define_singleton_method :"#{prefix}next_week" do
+          __send__(:"#{prefix}between", Time.now, 1.week.from_now)
+        end
+
+        define_singleton_method :"#{prefix}next_month" do
+          __send__(:"#{prefix}between", Time.now, 1.month.from_now)
+        end
+
+        define_singleton_method :"#{prefix}next_year" do
+          __send__(:"#{prefix}between", Time.now, 1.year.from_now)
+        end
+
+        define_singleton_method :"#{prefix}last_day" do
+          __send__(:"#{prefix}between", 1.day.ago, Time.now)
+        end
+
         define_singleton_method :"#{prefix}last_week" do
-          __send__(:"#{prefix}after", 1.week.ago)
+          __send__(:"#{prefix}between", 1.week.ago, Time.now)
         end
 
         define_singleton_method :"#{prefix}last_month" do
-          __send__(:"#{prefix}after", 1.month.ago)
+          __send__(:"#{prefix}between", 1.month.ago, Time.now)
         end
 
         define_singleton_method :"#{prefix}last_year" do
-          __send__(:"#{prefix}after", 1.year.ago)
+          __send__(:"#{prefix}between", 1.year.ago, Time.now)
         end
 
         define_singleton_method :"#{prefix}last_n_days" do |count|
-          __send__(:"#{prefix}on_or_after", count.days.ago)
+          __send__(:"#{prefix}between", count.days.ago, Time.now)
+        end
+
+        define_singleton_method :"#{prefix}last_n_weeks" do |count|
+          __send__(:"#{prefix}between", count.weeks.ago, Time.now)
         end
 
         define_singleton_method :"#{prefix}last_n_months" do |count|
-          __send__(:"#{prefix}on_or_after", count.months.ago)
+          __send__(:"#{prefix}between", count.months.ago, Time.now)
         end
 
         define_singleton_method :"#{prefix}last_n_years" do |count|
-          __send__(:"#{prefix}on_or_after", count.years.ago)
+          __send__(:"#{prefix}between", count.years.ago, Time.now)
         end
 
         define_singleton_method :"#{prefix}next_n_days" do |count|
-          __send__(:"#{prefix}on_or_before", count.days.from_now)
+          __send__(:"#{prefix}between", Time.now, count.days.from_now)
+        end
+
+        define_singleton_method :"#{prefix}next_n_weeks" do |count|
+          __send__(:"#{prefix}between", Time.now, count.weeks.from_now)
         end
 
         define_singleton_method :"#{prefix}next_n_months" do |count|
-          __send__(:"#{prefix}on_or_before", count.months.from_now)
+          __send__(:"#{prefix}between", Time.now, count.months.from_now)
         end
 
         define_singleton_method :"#{prefix}next_n_years" do |count|
-          __send__(:"#{prefix}on_or_before", count.years.from_now)
+          __send__(:"#{prefix}between", Time.now, count.years.from_now)
         end
 
-        define_singleton_method :"#{prefix}last_30days" do
-          __send__(:"#{prefix}after", 30.days.ago)
+        define_singleton_method :"#{prefix}last_30_days" do
+          __send__(:"#{prefix}between", 30.days.ago, Time.now)
         end
 
         define_singleton_method :"#{prefix}most_recent" do
