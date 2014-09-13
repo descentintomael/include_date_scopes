@@ -36,7 +36,7 @@ module IncludeDateScopes
       end
 
       define_singleton_method :"#{prefix}last_30_days" do
-        __send__(:"#{prefix}between", 30.days.ago, Time.now)
+        __send__(:"#{prefix}last_n_days", 30)
       end
 
       define_singleton_method :"#{prefix}most_recent" do
