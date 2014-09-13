@@ -9,44 +9,23 @@ module IncludeDateScopes
         where(t[column_name].gteq(start_date.to_date).and(t[column_name].lteq(stop_date.to_date)))
       end
 
-      define_singleton_method :"#{prefix}on_or_before" do |date| 
-        where t[column_name].lteq date.to_date
-      end
-
-      define_singleton_method :"#{prefix}before" do |date| 
-        where t[column_name].lt date.to_date
-      end
-
-      define_singleton_method :"#{prefix}on_or_after" do |date|
-        where t[column_name].gteq date.to_date
-      end
-
-      define_singleton_method :"#{prefix}after" do |date| 
-        where t[column_name].gt date.to_date
-      end
-
-      define_singleton_method :"#{prefix}on" do |date|
-        where t[column_name].eq date.to_date
+      {:on_or_before => :lteq, :before => :lt, :on_or_after => :gteq, :after => :gt, :on => :eq}.each do |label, op|
+        define_singleton_method :"#{prefix}#{label}" do |date| 
+          where t[column_name].send op, date.to_date
+        end
       end
 
       define_singleton_method :"#{prefix}this_day" do
         __send__(:"#{prefix}today")
       end
 
-      define_singleton_method :"#{prefix}this_week" do
-        __send__(:"#{prefix}between", Date.today.beginning_of_week, Date.today.end_of_week)
-      end
-
-      define_singleton_method :"#{prefix}this_month" do
-        __send__(:"#{prefix}between", Date.today.beginning_of_month, Date.today.end_of_month)
-      end
-
-      define_singleton_method :"#{prefix}this_year" do
-        __send__(:"#{prefix}between", Date.today.beginning_of_year, Date.today.end_of_year)
+      [:week, :month, :year].each do |time_unit|
+        define_singleton_method :"#{prefix}this_#{time_unit}" do
+          __send__(:"#{prefix}between", Date.today.send(:"beginning_of_#{time_unit}"), Date.today.send(:"end_of_#{time_unit}"))
+        end
       end
 
       define_common_scopes t, prefix, column_name
     end
-
   end
 end
