@@ -20,68 +20,19 @@ module IncludeDateScopes
         __send__(:"#{prefix}on", Date.tomorrow)
       end
 
-      define_singleton_method :"#{prefix}next_day" do
-        __send__(:"#{prefix}between", Time.now, 1.day.from_now)
-      end
-
-      define_singleton_method :"#{prefix}next_week" do
-        __send__(:"#{prefix}between", Time.now, 1.week.from_now)
-      end
-
-      define_singleton_method :"#{prefix}next_month" do
-        __send__(:"#{prefix}between", Time.now, 1.month.from_now)
-      end
-
-      define_singleton_method :"#{prefix}next_year" do
-        __send__(:"#{prefix}between", Time.now, 1.year.from_now)
-      end
-
-      define_singleton_method :"#{prefix}last_day" do
-        __send__(:"#{prefix}between", 1.day.ago, Time.now)
-      end
-
-      define_singleton_method :"#{prefix}last_week" do
-        __send__(:"#{prefix}between", 1.week.ago, Time.now)
-      end
-
-      define_singleton_method :"#{prefix}last_month" do
-        __send__(:"#{prefix}between", 1.month.ago, Time.now)
-      end
-
-      define_singleton_method :"#{prefix}last_year" do
-        __send__(:"#{prefix}between", 1.year.ago, Time.now)
-      end
-
-      define_singleton_method :"#{prefix}last_n_days" do |count|
-        __send__(:"#{prefix}between", count.days.ago, Time.now)
-      end
-
-      define_singleton_method :"#{prefix}last_n_weeks" do |count|
-        __send__(:"#{prefix}between", count.weeks.ago, Time.now)
-      end
-
-      define_singleton_method :"#{prefix}last_n_months" do |count|
-        __send__(:"#{prefix}between", count.months.ago, Time.now)
-      end
-
-      define_singleton_method :"#{prefix}last_n_years" do |count|
-        __send__(:"#{prefix}between", count.years.ago, Time.now)
-      end
-
-      define_singleton_method :"#{prefix}next_n_days" do |count|
-        __send__(:"#{prefix}between", Time.now, count.days.from_now)
-      end
-
-      define_singleton_method :"#{prefix}next_n_weeks" do |count|
-        __send__(:"#{prefix}between", Time.now, count.weeks.from_now)
-      end
-
-      define_singleton_method :"#{prefix}next_n_months" do |count|
-        __send__(:"#{prefix}between", Time.now, count.months.from_now)
-      end
-
-      define_singleton_method :"#{prefix}next_n_years" do |count|
-        __send__(:"#{prefix}between", Time.now, count.years.from_now)
+      [:day, :week, :month, :year].each do |time_unit|
+        define_singleton_method :"#{prefix}next_#{time_unit}" do
+          __send__(:"#{prefix}between", Time.now, 1.send(time_unit).from_now)
+        end
+        define_singleton_method :"#{prefix}last_#{time_unit}" do
+          __send__(:"#{prefix}between", 1.send(time_unit).ago, Time.now)
+        end
+        define_singleton_method :"#{prefix}next_n_#{time_unit}s" do |count|
+          __send__(:"#{prefix}between", Time.now, count.send(time_unit).from_now)
+        end
+        define_singleton_method :"#{prefix}last_n_#{time_unit}s" do |count|
+          __send__(:"#{prefix}between", count.send(time_unit).ago, Time.now)
+        end
       end
 
       define_singleton_method :"#{prefix}last_30_days" do
