@@ -25,7 +25,7 @@ module IncludeDateScopes
         end
       end
 
-      define_common_scopes t, prefix, column_name
+      define_common_scopes prefix, column_name
     end
   end
 end

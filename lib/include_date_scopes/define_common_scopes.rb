@@ -1,9 +1,7 @@
 
 module IncludeDateScopes
   module DefineCommonScopes
-    def define_common_scopes(arel, prefix, column_name)
-      t = arel
-
+    def define_common_scopes(prefix, column_name)
       define_singleton_method :"#{prefix}day" do |day|
         __send__(:"#{prefix}on", day)
       end
