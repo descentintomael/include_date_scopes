@@ -4,7 +4,7 @@ require "include_date_scopes/version"
 Gem::Specification.new do |s|
   s.name        = 'include_date_scopes'
   s.version     = IncludeDateScopes::VERSION.dup
-  s.authors     = ['Sean Todd']
+  s.authors     = ['Sean Todd', 'Katharina Peter']
   s.email       = ['iphone.reply@gmail.com']
   s.homepage    = 'http://github.com/descentintomael/include_date_scopes'
   s.summary     = 'Include scopes for searching on a date column'
