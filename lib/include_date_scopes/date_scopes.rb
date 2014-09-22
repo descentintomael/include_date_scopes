@@ -1,4 +1,3 @@
-require 'pry'
 # Add the below date based scopes to a model.
 #
 #   between(start_date_or_time, stop_date_or_time)
@@ -57,7 +56,6 @@ module IncludeDateScopes
       end
 
       def column_type_for(column)
-        # raise "Cannot find column #{column}" unless columns_hash.include? column.to_s
         columns_hash[column.to_s].type
       end
     end
