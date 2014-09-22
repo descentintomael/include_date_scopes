@@ -1,3 +1,4 @@
+require 'pry'
 # Add the below date based scopes to a model.
 #
 #   between(start_date_or_time, stop_date_or_time)
@@ -39,13 +40,16 @@ module IncludeDateScopes
 
       def include_date_scopes_for(column,
                                   prepend_name = false,
-                                  column_type = column_type_for(column))
+                                  column_type = nil)
+        column_type ||= column_type_for(column)
         return unless self.table_exists?
         if column_type == :datetime
           define_timestamp_scopes_for column, prepend_name
         elsif column_type == :date
           define_date_scopes_for column, prepend_name
         end
+      rescue
+        warn "Not including date scopes for #{column} because of an error: #{$!.message}"
       end
 
       def include_named_date_scopes_for(column)
@@ -53,7 +57,8 @@ module IncludeDateScopes
       end
 
       def column_type_for(column)
-        self.columns_hash[column.to_s].type
+        # raise "Cannot find column #{column}" unless columns_hash.include? column.to_s
+        columns_hash[column.to_s].type
       end
     end
   end

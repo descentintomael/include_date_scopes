@@ -54,4 +54,16 @@ describe "Post" do
 
     it_behaves_like 'date scopes', :show_at
   end
+
+  describe 'using column which does not exist yet' do
+    it 'does not raise an error' do
+      previous_stderr, $stderr = $stderr, StringIO.new
+      expect {
+        define_model_class do
+          include_date_scopes_for :does_not_exist
+        end
+      }.to_not raise_error
+      $stderr = previous_stderr
+    end
+  end
 end
