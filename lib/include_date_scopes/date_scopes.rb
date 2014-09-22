@@ -37,17 +37,23 @@ module IncludeDateScopes
         include_date_scopes_for :created_at
       end
 
-      def include_date_scopes_for(column, prepend_name = false)
+      def include_date_scopes_for(column,
+                                  prepend_name = false,
+                                  column_type = column_type_for(column))
         return unless self.table_exists?
-        if self.columns_hash[column.to_s].type == :datetime
+        if column_type == :datetime
           define_timestamp_scopes_for column, prepend_name
-        elsif self.columns_hash[column.to_s].type == :date
+        elsif column_type == :date
           define_date_scopes_for column, prepend_name
         end
       end
 
       def include_named_date_scopes_for(column)
         include_date_scopes_for column, true
+      end
+
+      def column_type_for(column)
+        self.columns_hash[column.to_s].type
       end
     end
   end

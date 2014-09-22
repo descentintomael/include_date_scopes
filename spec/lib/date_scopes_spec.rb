@@ -40,4 +40,18 @@ describe "Post" do
 
     it_behaves_like 'date scopes', :show_until
   end
+
+  describe 'providing column type' do
+    before(:all) do
+      define_model_class do
+        include_date_scopes_for :show_at, nil, :date
+      end
+    end
+
+    it 'does not respond to time scopes' do
+      expect(Post).not_to respond_to(:last_n_minutes)
+    end
+
+    it_behaves_like 'date scopes', :show_at
+  end
 end
