@@ -28,8 +28,6 @@ shared_examples "date scopes" do |date_column = :created_at, prefix = '' |
   let(:date_column) { date_column }
 
   describe "date scopes" do
-    before(:all) { Timecop.freeze Time.local(2013,02,15,06,30) }
-
     describe ":between" do
       subject { test_class.send("#{prefix}between", 6.days.ago.to_date, 3.day.ago.to_date) }
 

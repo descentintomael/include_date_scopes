@@ -33,8 +33,6 @@ shared_examples "timestamp scopes" do |date_column = :created_at, prefix = '' |
   let(:date_column) { date_column }
 
   describe "timestamp scopes" do
-    before(:all) { Timecop.freeze Time.local(2013,02,15,06,30) }
-
     describe ':between' do
       let(:top_threshold) { 5.minutes.ago }
       let(:bottom_threshold) { 5.minutes.from_now }
