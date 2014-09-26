@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "Post" do
+describe "Model" do
   describe 'default timestamp scopes' do
     before(:all) do
       define_model_class do
