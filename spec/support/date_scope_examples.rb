@@ -22,7 +22,7 @@ shared_examples "between date scope" do |name|
   end
 end
 
-shared_examples "date scopes" do |date_column = :created_at, prefix = '' |
+shared_examples "date scopes" do |date_column = :show_until, prefix = '' |
   let(:test_class) { Post }
   let(:prefix) { prefix }
   let(:date_column) { date_column }
