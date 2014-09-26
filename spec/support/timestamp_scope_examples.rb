@@ -10,7 +10,7 @@ shared_examples "between time scope" do |name, difference = 1.second|
     let(:before_threshold_obj) { test_class.create! date_column => bottom_threshold + difference }
 
     it { should_not include after_threshold_obj }
-    it { should include at_top_threshold_obj }
+    it { should_not include at_top_threshold_obj }
     it { should include at_bottom_threshold_obj }
     it { should_not include before_threshold_obj }
 end
@@ -87,21 +87,21 @@ shared_examples "timestamp scopes" do |date_column = :created_at, prefix = '' |
     end
 
     describe ":today" do
-      let(:top_threshold) { Time.now.beginning_of_day }
+      let(:top_threshold) { Time.now.beginning_of_day - 1.second }
       let(:bottom_threshold) { Time.now.end_of_day }
       let(:arguments) { [] }
       include_examples 'between time scope','today'
     end
 
     describe ":yesterday" do
-      let(:top_threshold) { 1.day.ago.beginning_of_day }
+      let(:top_threshold) { 1.day.ago.beginning_of_day - 1.second }
       let(:bottom_threshold) { 1.day.ago.end_of_day }
       let(:arguments) { [] }
       include_examples 'between time scope','yesterday'
     end
 
     describe ":tomorrow" do
-      let(:top_threshold) { 1.day.from_now.beginning_of_day }
+      let(:top_threshold) { 1.day.from_now.beginning_of_day - 1.second }
       let(:bottom_threshold) { 1.day.from_now.end_of_day }
       let(:arguments) { [] }
       include_examples 'between time scope','tomorrow'
@@ -311,35 +311,35 @@ shared_examples "timestamp scopes" do |date_column = :created_at, prefix = '' |
     end
 
     describe ":this_hour" do
-      let(:top_threshold) { Time.now.beginning_of_hour }
+      let(:top_threshold) { Time.now.beginning_of_hour - 1.second }
       let(:bottom_threshold) { Time.now.end_of_hour }
       let(:arguments) { [] }
       include_examples 'between time scope','this_hour'
     end
 
     describe ":this_day" do
-      let(:top_threshold) { Time.now.beginning_of_day }
+      let(:top_threshold) { Time.now.beginning_of_day - 1.second }
       let(:bottom_threshold) { Time.now.end_of_day }
       let(:arguments) { [] }
       include_examples 'between time scope','this_day'
     end
 
     describe ":this_week" do
-      let(:top_threshold) { Time.now.beginning_of_week }
+      let(:top_threshold) { Time.now.beginning_of_week - 1.second }
       let(:bottom_threshold) { Time.now.end_of_week }
       let(:arguments) { [] }
       include_examples 'between time scope','this_week'
     end
 
     describe ":this_month" do
-      let(:top_threshold) { Time.now.beginning_of_month }
+      let(:top_threshold) { Time.now.beginning_of_month - 1.second }
       let(:bottom_threshold) { Time.now.end_of_month }
       let(:arguments) { [] }
       include_examples 'between time scope','this_month'
     end
 
     describe ":this_year" do
-      let(:top_threshold) { Time.now.beginning_of_year }
+      let(:top_threshold) { Time.now.beginning_of_year - 1.second }
       let(:bottom_threshold) { Time.now.end_of_year }
       let(:arguments) { [] }
       include_examples 'between time scope','this_year'
