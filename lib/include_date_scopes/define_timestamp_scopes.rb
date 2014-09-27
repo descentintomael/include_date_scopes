@@ -9,7 +9,7 @@ module IncludeDateScopes
       define_singleton_method :"#{prefix}between" do |start_date_or_time, stop_date_or_time|
         start_time = (start_date_or_time.is_a?(Date) ? start_date_or_time.to_time : start_date_or_time)
         stop_time = (stop_date_or_time.is_a?(Date) ? stop_date_or_time.to_time + 1.day : stop_date_or_time )
-        where(t[column_name].gt(start_time).and(t[column_name].lteq stop_time))
+        where(t[column_name].gteq(start_time).and(t[column_name].lt stop_time))
       end
 
       define_singleton_method :"#{prefix}on_or_before_date" do |date|
