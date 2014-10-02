@@ -1,5 +1,6 @@
 include_date_scopes
 ===================
+[![Build Status](https://travis-ci.org/descentintomael/include_date_scopes.svg?branch=master)](https://travis-ci.org/descentintomael/include_date_scopes)
 
 An ActiveRecord module for automatically including a large list of commonly used date related scopes.
 
