@@ -11,7 +11,7 @@ module IncludeDateScopes
 
       {:on_or_before => :lteq, :before => :lt, :on_or_after => :gteq, :after => :gt, :on => :eq}.each do |label, op|
         define_singleton_method :"#{prefix}#{label}" do |date| 
-          where t[column_name].send op, date.to_date
+          where t[column_name].send op, date
         end
       end
 
