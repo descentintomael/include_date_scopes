@@ -6,6 +6,6 @@ rvm:
   - "2.1.2"
 
 gemfile:
-  - gemfiles/3.2.gemfile
-  - gemfiles/4.0.gemfile
-  - gemfiles/4.1.gemfile
+  - gemfiles/ActiveRecord_3.2.gemfile
+  - gemfiles/ActiveRecord_4.0.gemfile
+  - gemfiles/ActiveRecord_4.1.gemfile
