@@ -35,6 +35,8 @@ end
 
 require "#{File.dirname(__FILE__)}/../lib/include_date_scopes/active_record"
 
+Timecop.safe_mode = false
+
 RSpec.configure do |config|
 
   config.mock_with :rspec

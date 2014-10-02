@@ -40,10 +40,6 @@ module IncludeDateScopes
         __send__(:"#{prefix}between", day.beginning_of_day, day.end_of_day)
       end
 
-      define_singleton_method :"#{prefix}day" do |day| 
-        __send__(:"#{prefix}on", day)
-      end
-
       define_singleton_method :"#{prefix}last_24_hours" do
         __send__(:"#{prefix}last_day")
       end
@@ -83,10 +79,9 @@ module IncludeDateScopes
 
     private
 
-      def time_object(time)
-        time.is_a?(Date) ? time.to_time + 1.day : time
-      end
-      
-   end
+    def time_object(time)
+      time.is_a?(Date) ? time.to_time + 1.day : time
+    end
+  end
 end
 
