@@ -10,10 +10,10 @@ shared_examples "between date scope" do |name|
       test_class.send("#{prefix}#{name}", *arguments).to_a
     end
 
-    let(:after_threshold_obj) { test_class.create! date_column => top_threshold.to_date - 1.second }
+    let(:after_threshold_obj) { test_class.create! date_column => top_threshold.to_date - 1.day }
     let(:at_top_threshold_obj) { test_class.create! date_column => top_threshold.to_date }
     let(:at_bottom_threshold_obj) { test_class.create! date_column => bottom_threshold.to_date }
-    let(:before_threshold_obj) { test_class.create! date_column => bottom_threshold.to_date + 1.second }
+    let(:before_threshold_obj) { test_class.create! date_column => bottom_threshold.to_date + 1.day }
 
     it { should_not include after_threshold_obj }
     it { should include at_top_threshold_obj }
