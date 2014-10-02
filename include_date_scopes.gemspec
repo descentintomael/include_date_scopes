@@ -19,8 +19,8 @@ DESCRIPTION
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
 
-  s.add_dependency "activerecord", '< 4'
-  s.add_dependency "railties", "3.2.17"
+  s.add_dependency "activerecord"
+  s.add_dependency "railties"
   s.add_development_dependency "rspec-rails", "2.14.2"
   s.add_development_dependency "sqlite3", "1.3.9"
   s.add_development_dependency 'timecop', "0.7.1"

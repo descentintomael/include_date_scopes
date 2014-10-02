@@ -1,7 +1,7 @@
 
 shared_examples "between time scope" do |name, difference = 1.second|
     subject do
-      test_class.send "#{prefix}#{name}", *arguments
+      test_class.send("#{prefix}#{name}", *arguments).to_a
     end
 
     let(:after_threshold_obj) { test_class.create! date_column => top_threshold - difference }
@@ -16,7 +16,7 @@ shared_examples "between time scope" do |name, difference = 1.second|
 end
 
 shared_examples "open ended time scope (exclusive)" do |name|
-  subject { test_class.send("#{prefix}#{name}", *arguments) }
+  subject { test_class.send("#{prefix}#{name}", *arguments).to_a }
 
   let(:after_threshold_obj) { test_class.create! date_column => threshold + 1.second }
   let(:on_threshold_obj) { test_class.create! date_column => threshold }
@@ -49,7 +49,7 @@ shared_examples "timestamp scopes" do |date_column = :created_at, prefix = '' |
 
     describe ":before" do
 
-      subject { test_class.send("#{prefix}before", 5.minutes.ago) }
+      subject { test_class.send("#{prefix}before", 5.minutes.ago).to_a }
 
       let(:after_threshold_obj) { test_class.create! date_column => 5.minutes.ago + 1.second }
       let(:on_threshold_obj) { test_class.create! date_column => 5.minutes.ago }
@@ -61,7 +61,7 @@ shared_examples "timestamp scopes" do |date_column = :created_at, prefix = '' |
     end
 
     describe ":on_or_after" do
-      subject { test_class.send("#{prefix}on_or_after", 5.minutes.ago) }
+      subject { test_class.send("#{prefix}on_or_after", 5.minutes.ago).to_a }
 
       let(:after_threshold_obj) { test_class.create! date_column => 5.minutes.ago + 1.second }
       let(:on_threshold_obj) { test_class.create! date_column => 5.minutes.ago }
@@ -73,7 +73,7 @@ shared_examples "timestamp scopes" do |date_column = :created_at, prefix = '' |
     end
 
     describe ":on_or_before" do
-      subject { test_class.send("#{prefix}on_or_before", 5.minutes.ago) }
+      subject { test_class.send("#{prefix}on_or_before", 5.minutes.ago).to_a }
 
       let(:after_threshold_obj) { test_class.create! date_column => 5.minutes.ago + 1.second }
       let(:on_threshold_obj) { test_class.create! date_column => 5.minutes.ago }

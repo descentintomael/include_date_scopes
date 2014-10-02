@@ -7,7 +7,7 @@ shared_examples "between date scope" do |name|
 
   context 'with date argument' do
     subject do
-      test_class.send "#{prefix}#{name}", *arguments
+      test_class.send("#{prefix}#{name}", *arguments).to_a
     end
 
     let(:after_threshold_obj) { test_class.create! date_column => top_threshold.to_date - 1.second }
@@ -29,7 +29,7 @@ shared_examples "date scopes" do |date_column = :show_until, prefix = '' |
 
   describe "date scopes" do
     describe ":between" do
-      subject { test_class.send("#{prefix}between", 6.days.ago.to_date, 3.day.ago.to_date) }
+      subject { test_class.send("#{prefix}between", 6.days.ago.to_date, 3.day.ago.to_date).to_a }
 
       let(:after_threshold_obj) { test_class.create! date_column => 2.days.ago.to_date }
       let(:at_top_threshold_obj) { test_class.create! date_column => 3.days.ago.to_date }
@@ -43,7 +43,7 @@ shared_examples "date scopes" do |date_column = :show_until, prefix = '' |
     end
 
     describe ":after" do
-      subject { test_class.send("#{prefix}after", 3.days.ago.to_date) }
+      subject { test_class.send("#{prefix}after", 3.days.ago.to_date).to_a }
 
       let(:after_threshold_obj) { test_class.create! date_column => 2.days.ago.to_date }
       let(:on_threshold_obj) { test_class.create! date_column => 3.days.ago.to_date }
@@ -55,7 +55,7 @@ shared_examples "date scopes" do |date_column = :show_until, prefix = '' |
     end
 
     describe ":before" do
-      subject { test_class.send("#{prefix}before", 3.days.ago.to_date) }
+      subject { test_class.send("#{prefix}before", 3.days.ago.to_date).to_a }
 
       let(:after_threshold_obj) { test_class.create! date_column => 4.days.ago.to_date }
       let(:on_threshold_obj) { test_class.create! date_column => 3.days.ago.to_date }
@@ -67,7 +67,7 @@ shared_examples "date scopes" do |date_column = :show_until, prefix = '' |
     end
 
     describe ":on_or_after" do
-      subject { test_class.send("#{prefix}on_or_after", 3.days.ago.to_date) }
+      subject { test_class.send("#{prefix}on_or_after", 3.days.ago.to_date).to_a }
 
       let(:after_threshold_obj) { test_class.create! date_column => 2.days.ago.to_date }
       let(:on_threshold_obj) { test_class.create! date_column => 3.days.ago.to_date }
@@ -79,7 +79,7 @@ shared_examples "date scopes" do |date_column = :show_until, prefix = '' |
     end
 
     describe ":on_or_before" do
-      subject { test_class.send("#{prefix}on_or_before", 3.days.ago) }
+      subject { test_class.send("#{prefix}on_or_before", 3.days.ago).to_a }
 
       let(:after_threshold_obj) { test_class.create! date_column => 4.days.ago.to_date }
       let(:on_threshold_obj) { test_class.create! date_column => 3.days.ago.to_date }
