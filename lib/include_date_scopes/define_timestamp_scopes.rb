@@ -9,7 +9,12 @@ module IncludeDateScopes
       define_singleton_method :"#{prefix}between" do |start_date_or_time, stop_date_or_time|
         start_time = (start_date_or_time.is_a?(Date) ? start_date_or_time.to_time : start_date_or_time)
         stop_time = (stop_date_or_time.is_a?(Date) ? stop_date_or_time.to_time + 1.day : stop_date_or_time )
-        where(t[column_name].gteq(start_time).and(t[column_name].lt stop_time))
+        # TODO: Between is passed a value like Time.end_of_day for stop_date_or_time,
+        # that should be included in the interval, so one second is added at the end.
+        # But this means between can't be used to query for a fraction of a second
+        # Alternatively, could change callers to pass in a time just after the interval,
+        # which could have microsecond precision.
+        where(t[column_name].gteq(start_time).and(t[column_name].lt stop_time + 1.second))
       end
 
       define_singleton_method :"#{prefix}on_or_before_date" do |date|
@@ -65,12 +70,14 @@ module IncludeDateScopes
       end
 
       define_singleton_method :"#{prefix}this_minute" do
-        __send__(:"#{prefix}between", Time.now.change(sec: 0), Time.now.change(sec: 59, usec: Rational(999999999, 1000)))
+        start_time = Time.now.change(sec: 0)
+        __send__(:"#{prefix}between", start_time, start_time.change(sec: 59))
       end
 
       [:hour, :day, :week, :month, :year].each do |time_unit|
         define_singleton_method :"#{prefix}this_#{time_unit}" do
-          __send__(:"#{prefix}between", 1.send(time_unit).ago.send(:"end_of_#{time_unit}"), Time.now.send(:"end_of_#{time_unit}"))
+          start_time = Time.now.send(:"beginning_of_#{time_unit}")
+          __send__(:"#{prefix}between", start_time, start_time.send(:"end_of_#{time_unit}"))
         end
       end
 

@@ -17,6 +17,7 @@ if RUBY_PLATFORM == "java"
   database_adapter = "jdbcsqlite3"
 else
   database_adapter = "sqlite3"
+  # database_adapter = "mysql2"
 end
 
 ActiveRecord::Base.default_timezone = :local
@@ -24,10 +25,10 @@ ActiveRecord::Base.logger = Logger.new(STDERR)
 ActiveRecord::Base.logger.level = Logger::WARN
 ActiveRecord::Base.establish_connection(
   :adapter  => database_adapter,
-  :database => ':memory:'
+  :database => (database_adapter == "sqlite3" ? ':memory:' : 'include_date_scopes_test')
 )
 ActiveRecord::Base.connection.create_table(:posts, :force => true) do |t|
-  t.timestamp :show_at
+  t.datetime :show_at
   t.date :show_until
   t.timestamp :created_at
   t.timestamp :updated_at
