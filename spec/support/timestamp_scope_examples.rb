@@ -4,10 +4,12 @@ shared_examples "between time scope" do |name, difference = 1.second|
       test_class.send("#{prefix}#{name}", *arguments).to_a
     end
 
-    let(:before_threshold_obj) { test_class.create! date_column => top_threshold - difference }
+    # In tests top_threshold and bottom_threshold should have time values,
+    # where the interval includes top_threshold but EXCLUDES bottom_threshold
+    let(:before_top_threshold_obj) { test_class.create! date_column => top_threshold - difference }
     let(:at_top_threshold_obj) { test_class.create! date_column => top_threshold }
+    let(:before_bottom_threshold_obj) { test_class.create! date_column => bottom_threshold - difference }
     let(:at_bottom_threshold_obj) { test_class.create! date_column => bottom_threshold }
-    let(:after_threshold_obj) { test_class.create! date_column => bottom_threshold + difference }
 
     # it do # TODO: Remove or disable when done debugging
     #   puts "#{prefix}#{name}: #{arguments.to_s}"
@@ -15,10 +17,10 @@ shared_examples "between time scope" do |name, difference = 1.second|
     #   puts "#{date_column} is #{at_bottom_threshold_obj.send(date_column)}" if name == "this_minute"
     # end
 
-    it { should_not include after_threshold_obj }
+    it { should_not include before_top_threshold_obj }
     it { should include at_top_threshold_obj }
-    it { should include at_bottom_threshold_obj }
-    it { should_not include before_threshold_obj }
+    it { should include before_bottom_threshold_obj }
+    it { should_not include at_bottom_threshold_obj }
 end
 
 shared_examples "open ended time scope (exclusive)" do |name|

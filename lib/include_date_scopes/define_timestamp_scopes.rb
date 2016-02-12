@@ -7,14 +7,12 @@ module IncludeDateScopes
       t = self.arel_table
 
       define_singleton_method :"#{prefix}between" do |start_date_or_time, stop_date_or_time|
+        # If start_date_or_time is a Date, the interval INCLUDES the start of the day; otherwise, the interval INCLUDES the argument time.
+        # If stop_date_or_time is a Date, the interval INCLUDES the end date; otherwise, the interval EXCLUDES the argument time.
+        # For example between(Date.today, Date.today) is equivalent to between(Date.today.midnight, Date.tomorrow.midnight).
         start_time = (start_date_or_time.is_a?(Date) ? start_date_or_time.to_time : start_date_or_time)
         stop_time = (stop_date_or_time.is_a?(Date) ? stop_date_or_time.to_time + 1.day : stop_date_or_time )
-        # TODO: Between is passed a value like Time.end_of_day for stop_date_or_time,
-        # that should be included in the interval, so one second is added at the end.
-        # But this means between can't be used to query for a fraction of a second
-        # Alternatively, could change callers to pass in a time just after the interval,
-        # which could have microsecond precision.
-        where(t[column_name].gteq(start_time).and(t[column_name].lt stop_time + 1.second))
+        where(t[column_name].gteq(start_time).and(t[column_name].lt stop_time))
       end
 
       define_singleton_method :"#{prefix}on_or_before_date" do |date|
