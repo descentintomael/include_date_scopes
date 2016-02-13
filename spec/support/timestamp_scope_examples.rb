@@ -1,4 +1,3 @@
-
 shared_examples "between time scope" do |name, difference = 1.second|
     subject do
       test_class.send("#{prefix}#{name}", *arguments).to_a
@@ -6,10 +5,10 @@ shared_examples "between time scope" do |name, difference = 1.second|
 
     # In tests top_threshold and bottom_threshold should have time values,
     # where the interval includes top_threshold but EXCLUDES bottom_threshold
-    let(:before_top_threshold_obj) { test_class.create! date_column => top_threshold - difference }
-    let(:at_top_threshold_obj) { test_class.create! date_column => top_threshold }
-    let(:before_bottom_threshold_obj) { test_class.create! date_column => bottom_threshold - difference }
-    let(:at_bottom_threshold_obj) { test_class.create! date_column => bottom_threshold }
+    let(:before_top_threshold_obj) { test_class.create! date_column => top_threshold.to_time - difference }
+    let(:at_top_threshold_obj) { test_class.create! date_column => top_threshold.to_time }
+    let(:before_bottom_threshold_obj) { test_class.create! date_column => bottom_threshold.to_time - difference }
+    let(:at_bottom_threshold_obj) { test_class.create! date_column => bottom_threshold.to_time }
 
     # it do # TODO: Remove or disable when done debugging
     #   puts "#{prefix}#{name}: #{arguments.to_s}"
@@ -35,12 +34,44 @@ shared_examples "open ended time scope (exclusive)" do |name|
   it { should_not include before_threshold_obj }
 end
 
+shared_examples "before date scope" do |name|
+  subject { test_class.send("#{prefix}#{name}", *arguments).to_a }
+
+  # threshold is included in the interval
+  let(:before_top_threshold_obj) { test_class.create! date_column => threshold - 1.second }
+  let(:at_top_threshold_obj) { test_class.create! date_column => threshold }
+
+  # it do # TODO: Remove or disable when done debugging
+  #   puts "#{prefix}#{name}: #{arguments.to_s}"
+  #   puts test_class.send("#{prefix}#{name}", *arguments).to_sql
+  # end
+
+  it { should include before_top_threshold_obj }
+  it { should_not include at_top_threshold_obj }
+end
+
+shared_examples "after date scope" do |name|
+  subject { test_class.send("#{prefix}#{name}", *arguments).to_a }
+
+  # threshold is included in the interval
+  let(:before_top_threshold_obj) { test_class.create! date_column => threshold - 1.second }
+  let(:at_top_threshold_obj) { test_class.create! date_column => threshold }
+
+  # it do # TODO: Remove or disable when done debugging
+  #   puts "#{prefix}#{name}: #{arguments.to_s}"
+  #   puts test_class.send("#{prefix}#{name}", *arguments).to_sql
+  # end
+
+  it { should_not include before_top_threshold_obj }
+  it { should include at_top_threshold_obj }
+end
+
 shared_examples "timestamp scopes" do |date_column = :created_at, prefix = '' |
   let(:test_class) { Post }
   let(:prefix) { prefix }
   let(:date_column) { date_column }
 
-  describe "timestamp scopes" do
+  describe "timestamp arguments" do
     describe ':between' do
       let(:top_threshold) { 5.minutes.ago }
       let(:bottom_threshold) { 5.minutes.from_now }
@@ -91,24 +122,85 @@ shared_examples "timestamp scopes" do |date_column = :created_at, prefix = '' |
       it { should include on_threshold_obj }
       it { should include before_threshold_obj }
     end
+  end
 
+  describe "date arguments" do
+    describe ":between" do
+      let(:top_threshold) { Date.today.midnight }
+      let(:bottom_threshold) { Date.today.midnight + 1.day }
+      let(:arguments) { [Date.today, Date.today] }
+      include_examples "between time scope", 'between'
+    end
+
+    describe ":on_or_before_date" do
+      let(:threshold) { Date.tomorrow.midnight }
+      let(:arguments) { [ Date.today ] }
+
+      include_examples 'before date scope', 'on_or_before_date'
+    end
+
+    describe ":on_or_before" do
+      let(:threshold) { Date.tomorrow.midnight }
+      let(:arguments) { [ Date.today ] }
+
+      include_examples 'before date scope', 'on_or_before'
+    end
+
+    describe ":before" do
+      let(:threshold) { Date.today.midnight }
+      let(:arguments) { [ Date.today ] }
+
+      include_examples 'before date scope', 'before'
+    end
+
+    describe ":on_or_after_date" do
+      let(:threshold) { Date.today.midnight }
+      let(:arguments) { [ Date.today ] }
+
+      include_examples 'after date scope', 'on_or_after_date'
+    end
+
+    describe ":on_or_after" do
+      let(:threshold) { Date.today.midnight }
+      let(:arguments) { [ Date.today ] }
+
+      include_examples 'after date scope', 'on_or_after'
+    end
+
+    describe ":after" do
+      let(:threshold) { Date.tomorrow.midnight }
+      let(:arguments) { [ Date.today ] }
+
+      include_examples 'after date scope', 'after'
+    end
+
+    describe ":on" do
+      let(:top_threshold) { Date.today.midnight }
+      let(:bottom_threshold) { Date.tomorrow.midnight }
+      let(:arguments) { [ Date.today ] }
+
+      include_examples "between time scope", 'on'
+    end
+  end
+
+  describe "implicit argument" do
     describe ":today" do
       let(:top_threshold) { Time.now.beginning_of_day }
-      let(:bottom_threshold) { Time.now.end_of_day }
+      let(:bottom_threshold) { Time.now.beginning_of_day + 1.day }
       let(:arguments) { [] }
       include_examples 'between time scope','today'
     end
 
     describe ":yesterday" do
       let(:top_threshold) { 1.day.ago.beginning_of_day }
-      let(:bottom_threshold) { 1.day.ago.end_of_day }
+      let(:bottom_threshold) { Time.now.beginning_of_day }
       let(:arguments) { [] }
       include_examples 'between time scope','yesterday'
     end
 
     describe ":tomorrow" do
       let(:top_threshold) { 1.day.from_now.beginning_of_day }
-      let(:bottom_threshold) { 1.day.from_now.end_of_day }
+      let(:bottom_threshold) { 2.day.from_now.beginning_of_day }
       let(:arguments) { [] }
       include_examples 'between time scope','tomorrow'
     end

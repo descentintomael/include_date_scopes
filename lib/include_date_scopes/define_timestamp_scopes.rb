@@ -1,4 +1,3 @@
-
 module IncludeDateScopes
   module DefineTimestampScopes
  
@@ -19,28 +18,36 @@ module IncludeDateScopes
         where( t[column_name].lt date.to_date.tomorrow.midnight.gmtime )
       end
 
-      define_singleton_method :"#{prefix}on_or_before" do |time| 
-        where(t[column_name].lteq time_object(time))
+      define_singleton_method :"#{prefix}on_or_before" do |time|
+        if time.is_a?(Date)
+          where(t[column_name].lt time.to_time + 1.day)
+        else
+          where(t[column_name].lteq time)
+        end
       end
 
       define_singleton_method :"#{prefix}before" do |time| 
-        where(t[column_name].lt time_object(time))
+        where(t[column_name].lt time)
       end
 
       define_singleton_method :"#{prefix}on_or_after_date" do |time|
-        where(t[column_name].gteq time.to_date.midnight.gmtime )
+        where(t[column_name].gteq time.to_date.midnight.gmtime ) # TODO: Why .gmtime here?
       end
 
       define_singleton_method :"#{prefix}on_or_after" do |time|
-        where(t[column_name].gteq time_object(time))
+        where(t[column_name].gteq time.to_time)
       end
 
       define_singleton_method :"#{prefix}after" do |time|
-        where(t[column_name].gt (time.is_a?(Date) ? time.to_time + 1.day : time ))
+        if time.is_a?(Date)
+          where(t[column_name].gteq time.to_time + 1.day)
+        else
+          where(t[column_name].gt time)
+        end
       end
 
       define_singleton_method :"#{prefix}on" do |day| 
-        __send__(:"#{prefix}between", day.beginning_of_day, day.end_of_day)
+        __send__(:"#{prefix}between", day.to_date, day.to_date)
       end
 
       define_singleton_method :"#{prefix}last_24_hours" do
