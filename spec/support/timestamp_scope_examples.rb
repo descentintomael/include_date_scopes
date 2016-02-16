@@ -410,35 +410,35 @@ shared_examples "timestamp scopes" do |date_column = :created_at, prefix = '' |
 
     describe ":this_hour" do
       let(:top_threshold) { Time.now.beginning_of_hour }
-      let(:bottom_threshold) { Time.now.end_of_hour }
+      let(:bottom_threshold) { Time.now.beginning_of_hour + 1.hour }
       let(:arguments) { [] }
       include_examples 'between time scope','this_hour'
     end
 
     describe ":this_day" do
       let(:top_threshold) { Time.now.beginning_of_day }
-      let(:bottom_threshold) { Time.now.end_of_day }
+      let(:bottom_threshold) { Time.now.beginning_of_day + 1.day }
       let(:arguments) { [] }
       include_examples 'between time scope','this_day'
     end
 
     describe ":this_week" do
       let(:top_threshold) { Time.now.beginning_of_week }
-      let(:bottom_threshold) { Time.now.end_of_week }
+      let(:bottom_threshold) { Time.now.beginning_of_week + 1.week }
       let(:arguments) { [] }
       include_examples 'between time scope','this_week'
     end
 
     describe ":this_month" do
       let(:top_threshold) { Time.now.beginning_of_month }
-      let(:bottom_threshold) { Time.now.end_of_month }
+      let(:bottom_threshold) { Time.now.beginning_of_month + 1.month }
       let(:arguments) { [] }
       include_examples 'between time scope','this_month'
     end
 
     describe ":this_year" do
       let(:top_threshold) { Time.now.beginning_of_year }
-      let(:bottom_threshold) { Time.now.end_of_year }
+      let(:bottom_threshold) { Time.now.beginning_of_year + 1.year }
       let(:arguments) { [] }
       include_examples 'between time scope','this_year'
     end

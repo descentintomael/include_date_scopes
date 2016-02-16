@@ -82,7 +82,7 @@ module IncludeDateScopes
       [:hour, :day, :week, :month, :year].each do |time_unit|
         define_singleton_method :"#{prefix}this_#{time_unit}" do
           start_time = Time.now.send(:"beginning_of_#{time_unit}")
-          __send__(:"#{prefix}between", start_time, start_time.send(:"end_of_#{time_unit}"))
+          __send__(:"#{prefix}between", start_time, start_time + 1.send(:"#{time_unit}"))
         end
       end
 
