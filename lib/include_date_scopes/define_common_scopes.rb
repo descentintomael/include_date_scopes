@@ -20,16 +20,20 @@ module IncludeDateScopes
 
       [:day, :week, :month, :year].each do |time_unit|
         define_singleton_method :"#{prefix}next_#{time_unit}" do
-          __send__(:"#{prefix}between", Time.now, 1.send(time_unit).from_now)
+          now = Time.now
+          __send__(:"#{prefix}between", now, now + 1.send(time_unit))
         end
         define_singleton_method :"#{prefix}last_#{time_unit}" do
-          __send__(:"#{prefix}between", 1.send(time_unit).ago, Time.now + 1.second)
+          now = Time.now
+          __send__(:"#{prefix}between", now - 1.send(time_unit), now + 1.second)
         end
         define_singleton_method :"#{prefix}next_n_#{time_unit}s" do |count|
-          __send__(:"#{prefix}between", Time.now, count.send(time_unit).from_now)
+          now = Time.now
+          __send__(:"#{prefix}between", now, now + count.send(time_unit))
         end
         define_singleton_method :"#{prefix}last_n_#{time_unit}s" do |count|
-          __send__(:"#{prefix}between", count.send(time_unit).ago, Time.now + 1.second)
+          now = Time.now
+          __send__(:"#{prefix}between", now - count.send(time_unit), now + 1.second)
         end
       end
 

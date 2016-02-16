@@ -21,7 +21,8 @@ module IncludeDateScopes
 
       [:week, :month, :year].each do |time_unit|
         define_singleton_method :"#{prefix}this_#{time_unit}" do
-          __send__(:"#{prefix}between", Date.today.send(:"beginning_of_#{time_unit}"), Date.today.send(:"end_of_#{time_unit}"))
+          today = Date.today
+          __send__(:"#{prefix}between", today.send(:"beginning_of_#{time_unit}"), today.send(:"end_of_#{time_unit}"))
         end
       end
 

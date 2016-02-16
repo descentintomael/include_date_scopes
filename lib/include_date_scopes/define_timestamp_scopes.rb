@@ -56,21 +56,25 @@ module IncludeDateScopes
 
       [:minute, :hour].each do |time_unit|
         define_singleton_method :"#{prefix}next_#{time_unit}" do
-         __send__(:"#{prefix}between", Time.now, 1.send(time_unit).from_now)
+          start_time = Time.now
+          __send__(:"#{prefix}between", start_time, start_time + 1.send(time_unit))
         end
 
         define_singleton_method :"#{prefix}last_#{time_unit}" do
-          __send__(:"#{prefix}between", 1.send(time_unit).ago, Time.now + 1.second)
+          now = Time.now
+          __send__(:"#{prefix}between", now - 1.send(time_unit), now + 1.second)
         end
       end
 
       [:seconds, :minutes, :hours].each do |time_unit|
         define_singleton_method :"#{prefix}last_n_#{time_unit}" do |count|
-          __send__(:"#{prefix}between", count.send(time_unit).ago, Time.now + 1.second)
+          now = Time.now
+          __send__(:"#{prefix}between", now - count.send(time_unit), now + 1.second)
         end
 
         define_singleton_method :"#{prefix}next_n_#{time_unit}" do |count|
-          __send__(:"#{prefix}between", Time.now, count.send(time_unit).from_now)
+          start_time = Time.now
+          __send__(:"#{prefix}between", start_time, start_time + count.send(time_unit))
         end
       end
 
