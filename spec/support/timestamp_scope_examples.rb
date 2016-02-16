@@ -15,7 +15,7 @@ shared_examples "between time scope" do |name, difference = 1.second|
     #   puts test_class.send("#{prefix}#{name}", *arguments).to_sql
     #   puts "#{date_column} is #{at_bottom_threshold_obj.send(date_column)}" if name == "this_minute"
     # end
-
+    #
     it { should_not include before_top_threshold_obj }
     it { should include at_top_threshold_obj }
     it { should include before_bottom_threshold_obj }
@@ -403,7 +403,7 @@ shared_examples "timestamp scopes" do |date_column = :created_at, prefix = '' |
 
     describe ":this_minute" do
       let(:top_threshold) { Time.now.change(sec: 0) }
-      let(:bottom_threshold) { Time.now.change(sec: 59, usec: Rational(999999999, 1000)) }
+      let(:bottom_threshold) { Time.now.change(sec: 0) + 1.minute }
       let(:arguments) { [] }
       include_examples 'between time scope','this_minute'
     end

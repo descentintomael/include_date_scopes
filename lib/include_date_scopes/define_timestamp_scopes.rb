@@ -76,7 +76,7 @@ module IncludeDateScopes
 
       define_singleton_method :"#{prefix}this_minute" do
         start_time = Time.now.change(sec: 0)
-        __send__(:"#{prefix}between", start_time, start_time.change(sec: 59))
+        __send__(:"#{prefix}between", start_time, start_time + 1.minute)
       end
 
       [:hour, :day, :week, :month, :year].each do |time_unit|
