@@ -23,13 +23,13 @@ module IncludeDateScopes
           __send__(:"#{prefix}between", Time.now, 1.send(time_unit).from_now)
         end
         define_singleton_method :"#{prefix}last_#{time_unit}" do
-          __send__(:"#{prefix}between", 1.send(time_unit).ago, Time.now)
+          __send__(:"#{prefix}between", 1.send(time_unit).ago, Time.now + 1.second)
         end
         define_singleton_method :"#{prefix}next_n_#{time_unit}s" do |count|
           __send__(:"#{prefix}between", Time.now, count.send(time_unit).from_now)
         end
         define_singleton_method :"#{prefix}last_n_#{time_unit}s" do |count|
-          __send__(:"#{prefix}between", count.send(time_unit).ago, Time.now)
+          __send__(:"#{prefix}between", count.send(time_unit).ago, Time.now + 1.second)
         end
       end
 

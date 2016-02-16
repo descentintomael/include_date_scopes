@@ -249,98 +249,98 @@ shared_examples "timestamp scopes" do |date_column = :created_at, prefix = '' |
 
     describe ":last_minute" do
       let(:top_threshold) { 1.minute.ago }
-      let(:bottom_threshold) { Time.now }
+      let(:bottom_threshold) { Time.now + 1.second }
       let(:arguments) { [] }
       include_examples 'between time scope','last_minute'
     end
 
     describe ":last_hour" do
       let(:top_threshold) { 1.hour.ago }
-      let(:bottom_threshold) { Time.now }
+      let(:bottom_threshold) { Time.now + 1.second }
       let(:arguments) { [] }
       include_examples 'between time scope','last_hour'
     end
 
     describe ":last_24_hours" do
       let(:top_threshold) { 1.day.ago }
-      let(:bottom_threshold) { Time.now }
+      let(:bottom_threshold) { Time.now + 1.second }
       let(:arguments) { [] }
       include_examples 'between time scope','last_24_hours'
     end
 
     describe ":last_day" do
       let(:top_threshold) { 1.day.ago }
-      let(:bottom_threshold) { Time.now }
+      let(:bottom_threshold) { Time.now + 1.second }
       let(:arguments) { [] }
       include_examples 'between time scope','last_day'
     end
 
     describe ":last_week" do
       let(:top_threshold) { 1.week.ago }
-      let(:bottom_threshold) { Time.now }
+      let(:bottom_threshold) { Time.now + 1.second }
       let(:arguments) { [] }
       include_examples 'between time scope','last_week'
     end
 
     describe ":last_month" do
       let(:top_threshold) { 1.month.ago }
-      let(:bottom_threshold) { Time.now }
+      let(:bottom_threshold) { Time.now + 1.second }
       let(:arguments) { [] }
       include_examples 'between time scope','last_month'
     end
 
     describe ":last_year" do
       let(:top_threshold) { 1.year.ago }
-      let(:bottom_threshold) { Time.now }
+      let(:bottom_threshold) { Time.now + 1.second }
       let(:arguments) { [] }
       include_examples 'between time scope','last_year'
     end
 
     describe ":last_n_seconds" do
       let(:top_threshold) { 3.seconds.ago }
-      let(:bottom_threshold) { Time.now }
+      let(:bottom_threshold) { Time.now + 1.second }
       let(:arguments) { [3] }
       include_examples 'between time scope','last_n_seconds'
     end
 
     describe ":last_n_minutes" do
       let(:top_threshold) { 3.minutes.ago }
-      let(:bottom_threshold) { Time.now }
+      let(:bottom_threshold) { Time.now + 1.second }
       let(:arguments) { [3] }
       include_examples 'between time scope','last_n_minutes'
     end
 
     describe ":last_n_hours" do
       let(:top_threshold) { 3.hours.ago }
-      let(:bottom_threshold) { Time.now }
+      let(:bottom_threshold) { Time.now + 1.second }
       let(:arguments) { [3] }
       include_examples 'between time scope','last_n_hours'
     end
 
     describe ":last_n_days" do
       let(:top_threshold) { 3.days.ago }
-      let(:bottom_threshold) { Time.now }
+      let(:bottom_threshold) { Time.now + 1.second }
       let(:arguments) { [3] }
       include_examples 'between time scope','last_n_days'
     end
 
     describe ":last_n_weeks" do
       let(:top_threshold) { 3.weeks.ago }
-      let(:bottom_threshold) { Time.now }
+      let(:bottom_threshold) { Time.now + 1.second }
       let(:arguments) { [3] }
       include_examples 'between time scope','last_n_weeks'
     end
 
     describe ":last_n_months" do
       let(:top_threshold) { 3.months.ago }
-      let(:bottom_threshold) { Time.now }
+      let(:bottom_threshold) { Time.now + 1.second }
       let(:arguments) { [3] }
       include_examples 'between time scope','last_n_months'
     end
 
     describe ":last_n_years" do
       let(:top_threshold) { 3.years.ago }
-      let(:bottom_threshold) { Time.now }
+      let(:bottom_threshold) { Time.now + 1.second }
       let(:arguments) { [3] }
       include_examples 'between time scope','last_n_years'
     end
@@ -396,7 +396,7 @@ shared_examples "timestamp scopes" do |date_column = :created_at, prefix = '' |
 
     describe ":last_30_days" do
       let(:top_threshold) { 30.days.ago }
-      let(:bottom_threshold) { Time.now }
+      let(:bottom_threshold) { Time.now + 1.second }
       let(:arguments) { [] }
       include_examples 'between time scope','last_30_days'
     end
