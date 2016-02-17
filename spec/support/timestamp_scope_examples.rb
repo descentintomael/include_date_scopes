@@ -10,12 +10,11 @@ shared_examples "between time scope" do |name, difference = 1.second|
     let(:before_bottom_threshold_obj) { test_class.create! date_column => bottom_threshold.to_time - difference }
     let(:at_bottom_threshold_obj) { test_class.create! date_column => bottom_threshold.to_time }
 
-    # it do # TODO: Remove or disable when done debugging
-    #   puts "#{prefix}#{name}: #{arguments.to_s}"
-    #   puts test_class.send("#{prefix}#{name}", *arguments).to_sql
-    #   puts "#{date_column} is #{at_bottom_threshold_obj.send(date_column)}" if name == "this_minute"
-    # end
-    #
+    before do
+      # puts "#{prefix}#{name}: #{arguments.to_s}"
+      # puts test_class.send("#{prefix}#{name}", *arguments).to_sql
+    end
+
     it { should_not include before_top_threshold_obj }
     it { should include at_top_threshold_obj }
     it { should include before_bottom_threshold_obj }
@@ -29,10 +28,10 @@ shared_examples "before time scope" do |name|
   let(:before_top_threshold_obj) { test_class.create! date_column => threshold - 1.second }
   let(:at_top_threshold_obj) { test_class.create! date_column => threshold }
 
-  # it do # TODO: Remove or disable when done debugging
-  #   puts "#{prefix}#{name}: #{arguments.to_s}"
-  #   puts test_class.send("#{prefix}#{name}", *arguments).to_sql
-  # end
+  before do
+    # puts "#{prefix}#{name}: #{arguments.to_s}"
+    # puts test_class.send("#{prefix}#{name}", *arguments).to_sql
+  end
 
   it { should include before_top_threshold_obj }
   it { should_not include at_top_threshold_obj }
@@ -45,10 +44,10 @@ shared_examples "after time scope" do |name|
   let(:before_top_threshold_obj) { test_class.create! date_column => threshold - 1.second }
   let(:at_top_threshold_obj) { test_class.create! date_column => threshold }
 
-  # it do # TODO: Remove or disable when done debugging
-  #   puts "#{prefix}#{name}: #{arguments.to_s}"
-  #   puts test_class.send("#{prefix}#{name}", *arguments).to_sql
-  # end
+  before do
+    # puts "#{prefix}#{name}: #{arguments.to_s}"
+    # puts test_class.send("#{prefix}#{name}", *arguments).to_sql
+  end
 
   it { should_not include before_top_threshold_obj }
   it { should include at_top_threshold_obj }
