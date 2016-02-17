@@ -20,7 +20,7 @@ else
   # database_adapter = "mysql2"
 end
 
-ActiveRecord::Base.default_timezone = :local
+ActiveRecord::Base.default_timezone = :utc
 ActiveRecord::Base.logger = Logger.new(STDERR)
 ActiveRecord::Base.logger.level = Logger::WARN
 ActiveRecord::Base.establish_connection(
@@ -46,7 +46,7 @@ RSpec.configure do |config|
     Post.delete_all
   end
 
-  config.before(:suite) { Timecop.freeze Time.local(2013,02,15,06,30,47) }
+  config.before(:suite) { Timecop.freeze Time.local(2013,02,15,18,30,47) } # next day as utc
 end
 
 def define_model_class(name = "Post", parent_class_name = "ActiveRecord::Base", &block)

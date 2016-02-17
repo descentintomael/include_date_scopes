@@ -15,7 +15,7 @@ module IncludeDateScopes
       end
 
       define_singleton_method :"#{prefix}on_or_before_date" do |date|
-        where( t[column_name].lt date.to_date.tomorrow.midnight.gmtime )
+        where(t[column_name].lt date.to_date.tomorrow.midnight)
       end
 
       define_singleton_method :"#{prefix}on_or_before" do |time|
@@ -27,11 +27,11 @@ module IncludeDateScopes
       end
 
       define_singleton_method :"#{prefix}before" do |time| 
-        where(t[column_name].lt time)
+        where(t[column_name].lt time.to_time)
       end
 
       define_singleton_method :"#{prefix}on_or_after_date" do |time|
-        where(t[column_name].gteq time.to_date.midnight.gmtime ) # TODO: Why .gmtime here?
+        where(t[column_name].gteq time.to_date.midnight)
       end
 
       define_singleton_method :"#{prefix}on_or_after" do |time|
@@ -91,12 +91,6 @@ module IncludeDateScopes
       end
 
       define_common_scopes prefix, column_name
-    end
-
-    private
-
-    def time_object(time)
-      time.is_a?(Date) ? time.to_time + 1.day : time
     end
   end
 end

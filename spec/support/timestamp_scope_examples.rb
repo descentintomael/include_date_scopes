@@ -58,7 +58,7 @@ shared_examples "timestamp scopes" do |date_column = :created_at, prefix = '' |
   let(:prefix) { prefix }
   let(:date_column) { date_column }
 
-  describe "timestamp arguments" do
+  describe "Time arguments" do
     describe ':between' do
       let(:top_threshold) { 5.minutes.ago }
       let(:bottom_threshold) { 5.minutes.from_now }
@@ -80,6 +80,14 @@ shared_examples "timestamp scopes" do |date_column = :created_at, prefix = '' |
       include_examples 'before time scope', 'before'
     end
 
+    describe ":on" do
+      let(:top_threshold) { Date.today.midnight }
+      let(:bottom_threshold) { Date.tomorrow.midnight }
+      let(:arguments) { [ Time.now ] }
+
+      include_examples "between time scope", 'on'
+    end
+
     describe ":on_or_after" do
       let(:threshold) { 5.minutes.ago }
       let(:arguments) { [ 5.minutes.ago ] }
@@ -95,7 +103,7 @@ shared_examples "timestamp scopes" do |date_column = :created_at, prefix = '' |
     end
   end
 
-  describe "date arguments" do
+  describe "Date arguments" do
     describe ":between" do
       let(:top_threshold) { Date.today.midnight }
       let(:bottom_threshold) { Date.today.midnight + 1.day }

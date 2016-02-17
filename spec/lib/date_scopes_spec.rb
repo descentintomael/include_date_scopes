@@ -1,6 +1,12 @@
 require 'spec_helper'
 
 describe "Model" do
+
+  before(:all) do
+    # puts "Local time: #{Time.now}"
+    # puts "UTC time:   #{Time.now.gmtime}"
+  end
+
   describe 'default timestamp scopes' do
     before(:all) do
       define_model_class do
@@ -34,17 +40,19 @@ describe "Model" do
   describe 'date scopes' do
     before(:all) do
       define_model_class do
-        include_date_scopes_for :show_until
+        include_named_date_scopes_for :show_until
       end
     end
 
-    it_behaves_like 'date scopes', :show_until
+    it_behaves_like 'date scopes', :show_until, 'show_until_'
   end
 
   describe 'providing column type' do
     before(:all) do
       define_model_class do
-        include_date_scopes_for :show_at, nil, :date
+        # Note that using date scopes to query a datetime column will yield incorrect results unless
+        # the database timezone is the same as the local timezone.
+        include_date_scopes_for :show_at, true, :date
       end
     end
 
@@ -52,7 +60,9 @@ describe "Model" do
       expect(Post).not_to respond_to(:last_n_minutes)
     end
 
-    it_behaves_like 'date scopes', :show_at
+    # Note that these specs succeed because the test threshold has only date granularity.
+    # For a true datetime column the thresholds should have second granularity.
+    it_behaves_like('date scopes', :show_at, 'show_at_')
   end
 
   describe 'using a non-date argument' do
