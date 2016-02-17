@@ -46,7 +46,7 @@ RSpec.configure do |config|
     Post.delete_all
   end
 
-  config.before(:suite) { Timecop.freeze Time.local(2013,02,15,06,30) }
+  config.before(:suite) { Timecop.freeze Time.local(2013,02,15,06,30,47) }
 end
 
 def define_model_class(name = "Post", parent_class_name = "ActiveRecord::Base", &block)
