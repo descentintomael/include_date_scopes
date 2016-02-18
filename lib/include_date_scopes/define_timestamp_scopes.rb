@@ -26,8 +26,9 @@ module IncludeDateScopes
         end
       end
 
-      define_singleton_method :"#{prefix}before" do |time| 
-        where(t[column_name].lt time.to_time)
+      define_singleton_method :"#{prefix}before" do |time|
+        time = time.to_time if time.kind_of? Date
+        where(t[column_name].lt time)
       end
 
       define_singleton_method :"#{prefix}on_or_after_date" do |time|

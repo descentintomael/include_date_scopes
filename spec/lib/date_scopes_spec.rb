@@ -72,11 +72,11 @@ describe "Model" do
     # word that's also used by my framework.
     it 'does not raise an error' do
       define_model_class do
-        include_date_scopes_for :show_until
+        include_named_date_scopes_for :show_at
+        include_named_date_scopes_for :show_until
       end
-      expect {
-        Post.before('abc')
-      }.to_not raise_error
+      expect { Post.show_at_before('abc') }.to_not raise_error
+      expect { Post.show_until_before('abc') }.to_not raise_error
     end
   end
 
