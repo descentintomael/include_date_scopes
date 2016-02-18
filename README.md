@@ -79,9 +79,9 @@ Timestamp Scopes
 | `between(start_time_or_date,stop_time_or_date)` | If start_date_or_time is a Date, the interval INCLUDES the start of the day; otherwise, the interval INCLUDES the argument time. If stop_date_or_time is a Date, the interval INCLUDES the end date; otherwise, the interval EXCLUDES the argument time. |
 | `on(date)` |  |
 | `on_or_before(time_or_date)` | At or before a Time argument, or on or before a Date argument |
-| `on_or_before_date(date)` |  |
-| `on_or_after(date)` | At or after a Time argument, or on or after a Date argument |
-| `on_or_after_date(date)` |  |
+| `on_or_before_date(time_or_date)` | Converts a Time argument to Date |
+| `on_or_after(time_or_date)` | At or after a Time argument, or on or after a Date argument |
+| `on_or_after_date(time_or_date)` | Converts a Time argument to Date |
 | `before(time_or_date)` |  |
 | `after(time_or_date)` |  |
 | `day(date)` | Synonym for `on(date)` |

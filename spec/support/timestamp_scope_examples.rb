@@ -95,11 +95,25 @@ shared_examples "timestamp scopes" do |date_column = :created_at, prefix = '' |
       include_examples 'after time scope', 'on_or_after'
     end
 
+    describe ":on_or_after_date" do
+      let(:threshold) { Date.today.midnight }
+      let(:arguments) { [ Time.now ] }
+
+      include_examples 'after time scope', 'on_or_after_date'
+    end
+
     describe ":on_or_before" do
       let(:threshold) { 5.minutes.ago + 1.second }
       let(:arguments) { [ 5.minutes.ago ] }
 
       include_examples 'before time scope', 'on_or_before'
+    end
+
+    describe ":on_or_before_date" do
+      let(:threshold) { Date.tomorrow.midnight }
+      let(:arguments) { [ Time.now ] }
+
+      include_examples 'before time scope', 'on_or_before_date'
     end
   end
 
