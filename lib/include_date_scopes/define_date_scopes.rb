@@ -10,7 +10,14 @@ module IncludeDateScopes
       end
 
       {:on_or_before => :lteq, :before => :lt, :on_or_after => :gteq, :after => :gt, :on => :eq}.each do |label, op|
-        define_singleton_method :"#{prefix}#{label}" do |date| 
+        define_singleton_method :"#{prefix}#{label}" do |date_or_time|
+          if date_or_time.kind_of? Time
+            date = date_or_time.to_date
+          elsif date_or_time.kind_of? DateTime
+            date = date_or_time.to_date
+          else
+            date = date_or_time
+          end
           where t[column_name].send op, date
         end
       end
@@ -21,7 +28,8 @@ module IncludeDateScopes
 
       [:week, :month, :year].each do |time_unit|
         define_singleton_method :"#{prefix}this_#{time_unit}" do
-          __send__(:"#{prefix}between", Date.today.send(:"beginning_of_#{time_unit}"), Date.today.send(:"end_of_#{time_unit}"))
+          today = Date.today
+          __send__(:"#{prefix}between", today.send(:"beginning_of_#{time_unit}"), today.send(:"end_of_#{time_unit}"))
         end
       end
 

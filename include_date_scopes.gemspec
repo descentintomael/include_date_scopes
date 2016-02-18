@@ -23,5 +23,6 @@ DESCRIPTION
   s.add_dependency "railties"
   s.add_development_dependency "rspec-rails", "2.14.2"
   s.add_development_dependency "sqlite3", "1.3.9"
+  # s.add_development_dependency "mysql2", "~> 0.3.10"  # TODO: How to dynamically choose sqlite or mysql?
   s.add_development_dependency 'timecop', "0.7.1"
 end
